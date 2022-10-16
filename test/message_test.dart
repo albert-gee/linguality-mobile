@@ -14,6 +14,7 @@ void main() {
     expect(message.message.length, lessThan(35));
   });
 
+
   test('Messages list size should increment after adding a new message', () {
     final messageService = MessageService();
     int initialSize = messageService.messages.length;
