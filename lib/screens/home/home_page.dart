@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:linguality_mobile/screens/home/widgets/conversation.dart';
 
 import '../../models/user.dart';
-import 'widgets/board.dart';
+import '../../modules/bot/widgets/bot_widget.dart';
+import '../../modules/board/widgets/board.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title, required this.user});
@@ -51,29 +51,7 @@ class _HomePageState extends State<HomePage> {
         defaultPanelState: PanelState.OPEN,
 
 
-        panel: Column(
-          children: [
-            const SizedBox(
-              height: 15.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 30,
-                  height: 5,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: const BorderRadius.all(Radius.circular(12.0))),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 15.0,
-            ),
-            const Conversation(),
-          ],
-        ),
+        panel: BotWidget(),
         body: Board(user: widget.user),
 
       ),
