@@ -9,8 +9,8 @@ class Message {
   Message.fromJson(Map<String, dynamic> json):
     id = json['id'],
     text = json['text'],
-    messageType = MessageType.bot.key == json['messageType'] ? MessageType.bot : MessageType.user,
-    timestamp = DateTime.parse(json['timestamp']);
+    messageType = json['fromUser']['externalId'] == 'bot' ? MessageType.bot : MessageType.user,
+    timestamp = DateTime.parse(json['createdAt']);
 
   Map<String, dynamic> toJson() => {
     'id': id,
