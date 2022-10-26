@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:linguality_mobile/modules/bot/models/message.dart';
 import 'package:linguality_mobile/modules/bot/widgets/messages_widget.dart';
-import 'package:linguality_mobile/modules/bot/widgets/reply_button_widget.dart';
 
 import '../blocs/bot_bloc/bot_bloc.dart';
 import '../blocs/bot_bloc/bot_event.dart';
