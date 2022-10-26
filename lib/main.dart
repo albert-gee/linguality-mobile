@@ -29,23 +29,6 @@ void main() async {
     ),
   );
 
-  // await c.client.httpClient?.post(
-  //     Uri.parse('http://10.65.3.116:18888/bot/respond'),
-  //     body: Message(text: 'Hello', messageType: MessageType.user, timestamp: DateTime.now())
-  // ).then((value) => print('dfgdfgh'));
-  // return User(
-  //     name: userInformation['given_name'],
-  //     email: userInformation['email'],
-  //     emailVerified: userInformation['email_verified'],
-  //     id: userInformation['sub']
-  // );
-
-
-  // var user = User(
-  //     id: '1',
-  //     name: 'John Doe',
-  //     email: 'user@user.ru', emailVerified: true
-  // );
   var userInformation = await credential.getUserInfo();
   var user = User(
       name: userInformation['given_name'],
