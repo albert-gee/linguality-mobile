@@ -21,11 +21,11 @@ class OpenInputForResponseToBotEvent extends BotEvent {
   List<Object> get props => [bot];
 }
 
-class SendMessageToBotEvent extends BotEvent {
+class SentMessageToBotEvent extends BotEvent {
   final Bot bot;
   final Message message;
 
-  SendMessageToBotEvent(this.message, this.bot);
+  SentMessageToBotEvent(this.message, this.bot);
 
   @override
   List<Object> get props => [message, bot];
