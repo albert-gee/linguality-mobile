@@ -5,56 +5,33 @@ import '../../models/user.dart';
 import '../../modules/bot/widgets/bot_widget.dart';
 import '../../modules/board/widgets/board.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title, required this.user});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class HomePage extends StatelessWidget {
+    const HomePage({super.key, required this.title, required this.user});
 
   final String title;
   final User user;
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   final double _panelHeightOpen = 50;
-  double _panelHeightClosed = 800;
 
   @override
   Widget build(BuildContext context) {
-    _panelHeightClosed = MediaQuery.of(context).size.height - 500;
+    double panelHeightClosed = MediaQuery.of(context).size.height - 500;
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: SlidingUpPanel(
-        // defaultPanelState: PanelState.OPEN,
         minHeight: _panelHeightOpen,
-        maxHeight: _panelHeightClosed,
+        maxHeight: panelHeightClosed,
         defaultPanelState: PanelState.OPEN,
+        controller: PanelController(),
 
-
+        body: Board(user: user),
         panel: BotWidget(),
-        body: Board(user: widget.user),
 
       ),
+      // floatingActionButton: const ReplyButtonWidget()
     );
   }
 }
