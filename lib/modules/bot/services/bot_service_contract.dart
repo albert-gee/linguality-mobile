@@ -1,4 +1,5 @@
 import '../models/bot.dart';
+import '../models/bot_response.dart';
 import '../models/message.dart';
 
 abstract class BotServiceContract {
@@ -7,5 +8,5 @@ abstract class BotServiceContract {
   Future<Bot> init();
 
   /// Send a message to the bot
-  Future<Message> respond(Message userRequest);
+  Future<BotResponse> respond(Message userRequest);
 }
