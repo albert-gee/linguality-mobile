@@ -33,13 +33,14 @@ class BotProvider {
       }
       bot = Bot.fromJson(response.data);
     } catch (error, stacktrace) {
-      bot = Bot(messages: [
-        Message(
-          id: '0',
-          text: "Something went wrong. I couldn't initialize. Try again later",
-          messageType: MessageType.bot,
-          timestamp: DateTime.now())
-      ]);
+      bot = Bot(
+          messages: [
+            Message(
+              id: '0',
+              text: "Something went wrong. I couldn't initialize. Try again later",
+              messageType: MessageType.bot,
+              timestamp: DateTime.now())],
+          possibleAnswers: <PossibleAnswer>{});
     }
 
     return bot;
@@ -69,9 +70,6 @@ class BotProvider {
           "Authorization": "Bearer $token",
         })
       );
-
-      print("response: ${response.data}");
-
 
       if (response.statusCode != 200) {
         throw Exception('Unsuccessful response');

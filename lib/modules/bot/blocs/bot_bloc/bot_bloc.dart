@@ -38,6 +38,7 @@ class BotBloc extends Bloc<BotEvent, BotState> {
 
         final botResponse = await botRepository.respond(event.message);
         bot.messages.add(botResponse.message);
+        bot.possibleAnswers = botResponse.possibleAnswers;
 
         emit(BotStateMessageResponseReceived(bot));
 
