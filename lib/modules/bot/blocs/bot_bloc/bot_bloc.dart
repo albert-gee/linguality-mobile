@@ -30,14 +30,15 @@ class BotBloc extends Bloc<BotEvent, BotState> {
       }
     });
 
-    on<SendMessageToBotEvent>((event, emit) async {
+    on<SentMessageToBotEvent>((event, emit) async {
       try {
         final bot = event.bot;
         bot.messages.add(event.message);
         emit(BotStateMessageSent(bot));
 
         final botResponse = await botRepository.respond(event.message);
-        bot.messages.add(botResponse);
+        bot.messages.add(botResponse.message);
+
         emit(BotStateMessageResponseReceived(bot));
 
       } on Error catch (e) {
