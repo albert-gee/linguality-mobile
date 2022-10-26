@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:linguality_mobile/modules/bot/models/bot_response.dart';
+import 'package:linguality_mobile/modules/bot/models/possible_answer.dart';
 
 import '../models/bot.dart';
 import '../models/message.dart';
@@ -29,10 +31,8 @@ class BotProvider {
       if (response.statusCode != 200) {
         throw Exception('Unsuccessful bot init');
       }
-      print(response.data);
       bot = Bot.fromJson(response.data);
     } catch (error, stacktrace) {
-      print("Exception occurred: $error stackTrace: $stacktrace");
       bot = Bot(messages: [
         Message(
           id: '0',
@@ -45,26 +45,59 @@ class BotProvider {
     return bot;
   }
 
-  Future<Message> respond(Message userRequest) async {
-    Message message;
+  Future<BotResponse> respond(Message userRequest) async {
+    BotResponse botResponse;
 
     try {
-      Response response = await _dio.post("$_baseUrl/bot/respond", data: {
-        'message': userRequest.text
-      });
+      var storage = const FlutterSecureStorage();
+      var token = await storage.read(key: 'jwt',
+        iOptions: const IOSOptions(),
+        aOptions: const AndroidOptions(
+          encryptedSharedPreferences: true,
+        ),);
+
+      print("USER REQUEST: ${userRequest.text}");
+      print("TOKEN: $token");
+
+      Response response = await _dio.post(
+        "$_baseUrl/bot/respond",
+        data: {
+          'message': userRequest.text
+        },
+        options: Options(headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        })
+      );
+
+      print("response: ${response.data}");
+
+
       if (response.statusCode != 200) {
         throw Exception('Unsuccessful response');
       }
-      message = Message.fromJson(response.data);
+      botResponse = BotResponse.fromJson(response.data);
     } catch (error, stacktrace) {
-      print("Exception occurred: $error stackTrace: $stacktrace");
-      message = Message(
+
+      print(error);
+      print(stacktrace);
+
+      Set<PossibleAnswer> possibleAnswers = <PossibleAnswer>{
+        PossibleAnswer(
           id: '0',
-          text: "Something went wrong. I couldn't connect to the server. Try again later",
+          text: "Ok, thanks.",
+        )
+      };
+      botResponse = BotResponse(
+        message: Message(
+          id: '0',
+          text: "Something went wrong. I couldn't respond. Try again later",
           messageType: MessageType.bot,
-          timestamp: DateTime.now());
+          timestamp: DateTime.now()),
+        possibleAnswers: possibleAnswers
+      );
     }
 
-    return message;
+    return botResponse;
   }
 }
