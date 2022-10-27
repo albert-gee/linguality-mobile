@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panorama/panorama.dart';
 
 import '../../../models/user.dart';
 
@@ -11,20 +12,34 @@ class Board extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         constraints: const BoxConstraints.expand(),
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/neurons.jpg"),
-              fit: BoxFit.cover),
+        // decoration: const BoxDecoration(
+        //   image: DecorationImage(
+        //       image: AssetImage("assets/images/neurons.jpg"),
+        //       fit: BoxFit.cover),
+        // ),
+        child: Panorama(
+          animSpeed: 0,
+          // sensorControl: SensorControl.Orientation,
+          child: Image.asset('assets/images/panorama.jpg'),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Hello, ${user.name}',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   children: <Widget>[
+        //     Text(
+        //       'Hello, ${user.name}',
+        //       style: Theme.of(context).textTheme.headline4,
+        //     ),
+        //     SizedBox(
+        //       height: 300,
+        //       width: 300,
+        //       child: Panorama(
+        //         animSpeed: 1.0,
+        //         // sensorControl: SensorControl.Orientation,
+        //         child: Image.asset('assets/images/panorama.jpg'),
+        //       ),
+        //     ),
+        //   ],
+        // ),
       );
   }
 }

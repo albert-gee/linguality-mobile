@@ -46,6 +46,7 @@ dependencies:
   url_launcher: ^6.1.6
   shared_preferences: ^2.0.15
   flutter_secure_storage: ^6.0.0
+  panorama: ^0.4.1
 
 dev_dependencies:
   flutter_test:
