@@ -1,14 +1,15 @@
-import 'package:linguality_mobile/modules/bot/models/bot_response.dart';
-import 'package:linguality_mobile/modules/bot/models/possible_answer.dart';
-import 'package:linguality_mobile/utils/api/api.dart';
-import 'package:linguality_mobile/utils/api/api_response.dart';
+import 'package:bot/models/bot.dart';
+import 'package:bot/models/bot_response.dart';
+import 'package:bot/models/message.dart';
+import 'package:bot/models/possible_answer.dart';
+import 'package:bot/providers/bot_provider_contract.dart';
 
-import '../../../utils/key_storage.dart';
 import '../../../configuration/configuration.dart';
-import '../models/bot.dart';
-import '../models/message.dart';
+import '../../key_storage.dart';
+import '../api.dart';
+import '../api_response.dart';
 
-class BotProvider {
+class BotProvider extends BotProviderContract {
 
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
@@ -16,6 +17,7 @@ class BotProvider {
 
   /// Initiate a conversation with the bot
   Future<Bot> init() async {
+
     Bot bot;
 
     try {
@@ -43,7 +45,7 @@ class BotProvider {
             Message(
               id: '0',
               text: "Something went wrong. I couldn't initialize. Try again later",
-              messageType: MessageType.bot,
+              userId: 'BOT',
               timestamp: DateTime.now())],
           possibleAnswers: <PossibleAnswer>{});
     }
@@ -78,7 +80,7 @@ class BotProvider {
         message: Message(
           id: '0',
           text: "Something went wrong. I couldn't respond. Try again later",
-          messageType: MessageType.bot,
+          userId: 'BOT',
           timestamp: DateTime.now()),
         possibleAnswers: <PossibleAnswer>{
           PossibleAnswer(
