@@ -1,9 +1,10 @@
+import 'package:bot/widgets/bot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../models/user.dart';
-import '../../modules/bot/widgets/bot_widget.dart';
 import '../../modules/board/widgets/board.dart';
+import '../../utils/api/providers/bot_provider.dart';
 
 class HomePage extends StatelessWidget {
     const HomePage({super.key, required this.title, required this.user});
@@ -28,7 +29,7 @@ class HomePage extends StatelessWidget {
         controller: PanelController(),
 
         body: Board(user: user),
-        panel: BotWidget(),
+        panel: BotWidget(botProvider: BotProvider()),
 
       ),
       // floatingActionButton: const ReplyButtonWidget()
