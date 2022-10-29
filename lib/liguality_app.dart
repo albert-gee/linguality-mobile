@@ -33,7 +33,9 @@ class LingualityApp extends StatelessWidget {
             user: snapshot.data!,
           );
         } else {
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
       }),
 
