@@ -17,7 +17,6 @@ class LingualityApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsFlutterBinding.ensureInitialized();
 
     return MaterialApp(
       title: appTitle,
@@ -25,29 +24,28 @@ class LingualityApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder<User>(
-        future: _authenticate(),
-        builder: (context, AsyncSnapshot<User> snapshot) {
-        if (snapshot.hasData) {
-          return HomePage(
-            title: appTitle,
-            user: snapshot.data!,
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      }),
-
+          future: _authenticate(),
+          builder: (context, AsyncSnapshot<User> snapshot) {
+            if (snapshot.hasData) {
+              return HomePage(
+                title: appTitle,
+                user: snapshot.data!,
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 
-
   Future<User> _authenticate() async {
-
     // create the oAuth2 client
-    var issuer = await Issuer.discover(Uri.parse('${settings.oauth2ServerUrl}/realms/${settings.oauth2Realm}'));
-    var client = Client(issuer, settings.oauth2ClientName, clientSecret: settings.oauth2ClientSecret);
+    var issuer = await Issuer.discover(Uri.parse(
+        '${settings.oauth2ServerUrl}/realms/${settings.oauth2Realm}'));
+    var client = Client(issuer, settings.oauth2ClientName,
+        clientSecret: settings.oauth2ClientSecret);
 
     // open the authentication endpoint in web browser
     urlLauncher(String url) async {
@@ -59,10 +57,8 @@ class LingualityApp extends StatelessWidget {
     }
 
     // create an authenticator
-    var authenticator = Authenticator(
-        client,
-        scopes: settings.oauth2ClientScopes,
-        urlLancher: urlLauncher);
+    var authenticator = Authenticator(client,
+        scopes: settings.oauth2ClientScopes, urlLancher: urlLauncher);
 
     // starts the authentication
     var credential = await authenticator.authorize();
@@ -80,7 +76,6 @@ class LingualityApp extends StatelessWidget {
         name: userInformation['given_name'],
         email: userInformation['email'],
         emailVerified: userInformation['email_verified'],
-        id: userInformation['sub']
-    );
+        id: userInformation['sub']);
   }
 }
