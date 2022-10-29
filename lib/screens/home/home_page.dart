@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../models/user.dart';
-import '../../modules/board/widgets/board.dart';
+import 'board.dart';
 import '../../providers/bot_provider.dart';
 
 class HomePage extends StatelessWidget {

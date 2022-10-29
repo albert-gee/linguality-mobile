@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panorama/panorama.dart';
 
-import '../../../models/user.dart';
+import '../../models/user.dart';
 
 class Board extends StatelessWidget {
   const Board({super.key, required this.user});
