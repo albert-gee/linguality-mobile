@@ -1,12 +1,12 @@
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:linguality_mobile/modules/bot/models/possible_answer.dart';
 
 import '../blocs/bot_bloc/bot_bloc.dart';
 import '../blocs/bot_bloc/bot_event.dart';
 import '../models/bot.dart';
 import '../models/message.dart';
+import '../models/possible_answer.dart';
 
 class MessagesWidget extends StatelessWidget {
   const MessagesWidget(
@@ -15,17 +15,17 @@ class MessagesWidget extends StatelessWidget {
   final Bot bot;
   final bool inputOpened;
 
-  Widget _buildMessageBubble(BuildContext context, Message message) {
+  Widget _buildMessageBubble(BuildContext context, Message message, {isSent = true, bool isDelivered = true, bool isSeen = true}) {
     return BubbleSpecialThree(
-      isSender: message.messageType == MessageType.user,
+      isSender: message.userId == 'Bot',
       text: message.text,
-      color: message.messageType == MessageType.user
+      color: message.userId == 'Bot'
           ? const Color(0xFF1B97F3)
           : const Color(0xFF005073),
       tail: true,
-      sent: true,
-      delivered: true,
-      seen: true,
+      sent: isSent,
+      delivered: isDelivered,
+      seen: isSeen,
       textStyle: const TextStyle(color: Colors.white, fontSize: 18),
     );
   }
@@ -38,13 +38,13 @@ class MessagesWidget extends StatelessWidget {
       ),
       autocorrect: false,
       autofocus: true,
-      onSubmitted: (String text) async {
-        var message = Message(id: '0',
-            text: text,
-            timestamp: DateTime.now(),
-            messageType: MessageType.user);
+      onSubmitted: (String textMessage) async {
+        // var message = Message(id: '0',
+        //     text: text,
+        //     timestamp: DateTime.now(),
+        //     userId: '0');
         BlocProvider.of<BotBloc>(context).add(
-            SentMessageToBotEvent(message, bot));
+            SentMessageToBotEvent(textMessage, bot));
       },
     );
   }

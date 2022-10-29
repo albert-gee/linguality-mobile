@@ -1,14 +1,18 @@
+import 'package:bot/providers/bot_provider_contract.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/bot_response.dart';
+import '../../models/message.dart';
 import '../../repositories/bot_repository.dart';
 import 'bot_event.dart';
 import 'bot_state.dart';
 
 class BotBloc extends Bloc<BotEvent, BotState> {
 
-  final BotRepository botRepository = BotRepository();
+  final BotProviderContract botProvider;
+  final BotRepository botRepository;
 
-  BotBloc(): super(BotStateInit()) {
+  BotBloc(this.botProvider): botRepository = BotRepository(botProvider), super(BotStateInit()) {
 
     on<InitBotEvent>((event, emit) async {
       try {
@@ -33,10 +37,14 @@ class BotBloc extends Bloc<BotEvent, BotState> {
     on<SentMessageToBotEvent>((event, emit) async {
       try {
         final bot = event.bot;
-        bot.messages.add(event.message);
+        var message = Message(id: '0',
+            text: event.textMessage,
+            timestamp: DateTime.now(),
+            userId: '0');
+        bot.messages.add(message);
         emit(BotStateMessageSent(bot));
 
-        final botResponse = await botRepository.respond(event.message);
+        final BotResponse botResponse = await botRepository.respond(message);
         bot.messages.add(botResponse.message);
         bot.possibleAnswers = botResponse.possibleAnswers;
 
