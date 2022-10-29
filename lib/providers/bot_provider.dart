@@ -4,10 +4,10 @@ import 'package:bot/models/message.dart';
 import 'package:bot/models/possible_answer.dart';
 import 'package:bot/providers/bot_provider_contract.dart';
 
-import '../../../configuration/configuration.dart';
-import '../../key_storage.dart';
-import '../api.dart';
-import '../api_response.dart';
+import '../configuration/configuration.dart';
+import '../utils/key_storage.dart';
+import '../utils/api/api.dart';
+import '../utils/api/api_response.dart';
 
 class BotProvider extends BotProviderContract {
 
@@ -16,6 +16,7 @@ class BotProvider extends BotProviderContract {
   final Api api = Api();
 
   /// Initiate a conversation with the bot
+  @override
   Future<Bot> init() async {
 
     Bot bot;
@@ -53,6 +54,7 @@ class BotProvider extends BotProviderContract {
     return bot;
   }
 
+  @override
   Future<BotResponse> respond(Message userRequest) async {
     BotResponse botResponse;
 

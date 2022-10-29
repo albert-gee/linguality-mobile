@@ -4,7 +4,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../models/user.dart';
 import '../../modules/board/widgets/board.dart';
-import '../../utils/api/providers/bot_provider.dart';
+import '../../providers/bot_provider.dart';
 
 class HomePage extends StatelessWidget {
     const HomePage({super.key, required this.title, required this.user});
