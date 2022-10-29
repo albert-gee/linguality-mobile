@@ -1,38 +1,43 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:linguality_mobile/modules/bot/models/bot_response.dart';
 import 'package:linguality_mobile/modules/bot/models/possible_answer.dart';
+import 'package:linguality_mobile/utils/api/api.dart';
+import 'package:linguality_mobile/utils/api/api_response.dart';
 
+import '../../../utils/key_storage.dart';
+import '../../../configuration/configuration.dart';
 import '../models/bot.dart';
 import '../models/message.dart';
 
 class BotProvider {
-  final Dio _dio = Dio();
-  final String _baseUrl = "http://192.168.50.30:18888";
+
+  final Configuration settings = Configuration();
+  final KeyStorage keyStorage = KeyStorage();
+  final Api api = Api();
 
   /// Initiate a conversation with the bot
   Future<Bot> init() async {
     Bot bot;
+
     try {
-      var storage = const FlutterSecureStorage();
-      var token = await storage.read(key: 'jwt',
-        iOptions: const IOSOptions(),
-        aOptions: const AndroidOptions(
-          encryptedSharedPreferences: true,
-        ),);
-      Response response = await _dio.post("$_baseUrl/bot/init",
-        data: {},
-        options: Options(headers: {
-          "Content-Type": "application/json",
-          "Authorization":
-          "Bearer $token",
-        })
-      );
-      if (response.statusCode != 200) {
-        throw Exception('Unsuccessful bot init');
+      var token = await keyStorage.read(settings.secureStorageKeyJwt);
+
+      if(token != null) {
+        ApiResponse apiResponse = await api.post(
+            url: '${settings.apiServerUrl}/bot/init',
+            jwt: token);
+
+        if (apiResponse.statusCode == 200 || apiResponse.data != null) {
+          bot = Bot.fromJson(apiResponse.data!);
+        } else {
+          throw Exception('Unsuccessful bot init');
+        }
+
+      } else {
+        throw Exception("Unauthenticated");
       }
-      bot = Bot.fromJson(response.data);
     } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+
       bot = Bot(
           messages: [
             Message(
@@ -50,49 +55,37 @@ class BotProvider {
     BotResponse botResponse;
 
     try {
-      var storage = const FlutterSecureStorage();
-      var token = await storage.read(key: 'jwt',
-        iOptions: const IOSOptions(),
-        aOptions: const AndroidOptions(
-          encryptedSharedPreferences: true,
-        ),);
+      var token = await keyStorage.read(settings.secureStorageKeyJwt);
 
-      print("USER REQUEST: ${userRequest.text}");
-      print("TOKEN: $token");
+      if(token != null) {
+        ApiResponse apiResponse = await api.post(
+          url: '${settings.apiServerUrl}/bot/respond',
+          data: {'message': userRequest.text},
+          jwt: token);
 
-      Response response = await _dio.post(
-        "$_baseUrl/bot/respond",
-        data: {
-          'message': userRequest.text
-        },
-        options: Options(headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        })
-      );
+        if (apiResponse.statusCode == 200 || apiResponse.data != null) {
+          botResponse = BotResponse.fromJson(apiResponse.data!);
 
-      if (response.statusCode != 200) {
-        throw Exception('Unsuccessful response');
+        } else {
+          throw Exception('Unsuccessful response');
+        }
+      } else {
+        throw Exception("Unauthenticated");
       }
-      botResponse = BotResponse.fromJson(response.data);
     } catch (error, stacktrace) {
 
-      print(error);
-      print(stacktrace);
-
-      Set<PossibleAnswer> possibleAnswers = <PossibleAnswer>{
-        PossibleAnswer(
-          id: '0',
-          text: "Ok, thanks.",
-        )
-      };
       botResponse = BotResponse(
         message: Message(
           id: '0',
           text: "Something went wrong. I couldn't respond. Try again later",
           messageType: MessageType.bot,
           timestamp: DateTime.now()),
-        possibleAnswers: possibleAnswers
+        possibleAnswers: <PossibleAnswer>{
+          PossibleAnswer(
+            id: '0',
+            text: "Ok, thanks.",
+          )
+        }
       );
     }
 
