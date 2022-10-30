@@ -22,7 +22,7 @@ class BotProvider extends BotProviderContract {
     Bot bot;
 
     try {
-      var token = await keyStorage.read(settings.secureStorageKeyJwt);
+      var token = await keyStorage.read('jwt');
 
       if(token != null) {
         ApiResponse apiResponse = await api.post(
@@ -45,7 +45,7 @@ class BotProvider extends BotProviderContract {
           messages: [
             Message(
               id: '0',
-              text: "Something went wrong. I couldn't initialize. Try again later",
+              text: "I couldn't initialize the app. Try again later",
               userId: 'BOT',
               timestamp: DateTime.now())],
           possibleAnswers: <PossibleAnswer>{});
@@ -59,7 +59,7 @@ class BotProvider extends BotProviderContract {
     BotResponse botResponse;
 
     try {
-      var token = await keyStorage.read(settings.secureStorageKeyJwt);
+      var token = await keyStorage.read('jwt');
 
       if(token != null) {
         ApiResponse apiResponse = await api.post(
