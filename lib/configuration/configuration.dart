@@ -1,11 +1,15 @@
 class Configuration {
-  final String environment = 'dev-home'; // dev-bcit, dev-home
+  final String environment = 'dev-bcit'; // dev-bcit, dev-home
   late final String oauth2ServerUrl;
   late final String oauth2Realm;
   late final String oauth2ClientName;
   late final String oauth2ClientSecret;
   late final List<String> oauth2ClientScopes;
   late final String apiServerUrl;
+  late final String secureStorageKeyAccessToken;
+  late final String secureStorageKeyRefreshToken;
+  late final String secureStorageKeyTokenType;
+  late final String secureStorageKeyExpiresAt;
 
   Configuration() {
     if (environment == 'dev-home') {
@@ -22,5 +26,9 @@ class Configuration {
     oauth2ClientName = 'mobile';
     oauth2ClientSecret = 'lAD6Bd7f9vHlaqSBvfvtB0WXiMt0TJVb';
     oauth2ClientScopes = ['openid', 'profile', 'email'];
+    secureStorageKeyAccessToken = 'access-token';
+    secureStorageKeyRefreshToken = 'refresh-token';
+    secureStorageKeyTokenType = 'Bearer';
+    secureStorageKeyExpiresAt = 'expires-at';
   }
 }
