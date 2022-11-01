@@ -22,7 +22,7 @@ class BotProvider extends BotProviderContract {
     Bot bot;
 
     try {
-      var token = await keyStorage.read('jwt');
+      var token = await keyStorage.read(settings.secureStorageKeyAccessToken);
 
       if(token != null) {
         ApiResponse apiResponse = await api.post(
@@ -59,7 +59,7 @@ class BotProvider extends BotProviderContract {
     BotResponse botResponse;
 
     try {
-      var token = await keyStorage.read('jwt');
+      var token = await keyStorage.read(settings.secureStorageKeyAccessToken);
 
       if(token != null) {
         ApiResponse apiResponse = await api.post(
