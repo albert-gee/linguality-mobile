@@ -17,12 +17,20 @@ class AuthService {
     // Check if token is saved in secure storage. If not, authenticate with
     // browser. Otherwise update the token
     if (accessToken == null || refreshToken == null || expiresAt == null) {
-      await _authenticateWithBrowser();
+      try {
+        await _authenticateWithBrowser();
+      } catch (e) {
+        return false;
+      }
     } else {
       try {
         await _updateToken(accessToken, refreshToken, expiresAt);
       } catch (error) { // If token update fails, authenticate with browser
-        await _authenticateWithBrowser();
+        try {
+          await _authenticateWithBrowser();
+        } catch (e) {
+          return false;
+        }
       }
     }
 
