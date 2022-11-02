@@ -10,7 +10,6 @@ class LingualityApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: appTitle,
       theme: ThemeData(
@@ -19,31 +18,59 @@ class LingualityApp extends StatelessWidget {
       home: FutureBuilder<bool>(
           future: AuthService().authenticate(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            Widget? returnWidget;
+            Widget returnWidget = _buildLoadingWidget();
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              returnWidget = const Center(child: CircularProgressIndicator());
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData && snapshot.data == false) {
+                returnWidget = _buildErrorWidget('Authentication Error');
+              } else {
                 returnWidget = const HomePage(title: appTitle);
               }
             }
 
-            return returnWidget ?? _buildErrorWidget("Authentication failed");
+            return returnWidget;
           }),
     );
   }
 
-  _buildErrorWidget(String error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            error,
-            style: const TextStyle(color: Colors.red),
+  _buildLoadingWidget() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 300),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircularProgressIndicator(
+                color: Colors.blue,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Authenticating...',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 20,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  _buildErrorWidget(String error) {
+    return const Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Text(
+          'Authentication Error',
+          style: TextStyle(
+            color: Colors.blue,
+            fontSize: 20,
+          ),
+        ),
       ),
     );
   }
