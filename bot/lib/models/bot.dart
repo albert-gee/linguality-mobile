@@ -1,4 +1,4 @@
-import 'package:linguality_mobile/modules/bot/models/possible_answer.dart';
+import 'package:bot/models/possible_answer.dart';
 
 import 'message.dart';
 

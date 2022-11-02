@@ -1,11 +1,13 @@
-import 'package:linguality_mobile/modules/bot/models/bot_response.dart';
+import 'package:bot/providers/bot_provider_contract.dart';
 
 import '../models/bot.dart';
+import '../models/bot_response.dart';
 import '../models/message.dart';
-import '../providers/bot_provider.dart';
 
 class BotRepository {
-  final _provider = BotProvider();
+  final BotProviderContract _provider;
+
+  BotRepository(BotProviderContract provider) : _provider = provider;
 
   Future<Bot> init() => _provider.init();
   Future<BotResponse> respond(Message userRequest) => _provider.respond(userRequest);
