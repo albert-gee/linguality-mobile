@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/bot_bloc/bot_bloc.dart';
@@ -15,6 +16,8 @@ class BotWidget extends StatelessWidget {
   final BotProviderContract botProvider;
   final BotBloc botBloc;
 
+  final ScrollController scrollController = ScrollController();
+
   BotWidget({Key? key, required this.botProvider}): botBloc = BotBloc(botProvider), super(key: key);
 
   @override
@@ -27,6 +30,15 @@ class BotWidget extends StatelessWidget {
       create: (_) => botBloc,
       child: BlocListener<BotBloc, BotState>(
         listener: (context, state) {
+          if (state is BotStateMessageResponseReceived) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              scrollController.animateTo(
+                scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            });
+          }
         },
         child: BlocBuilder<BotBloc, BotState>(
           builder: (context, state) {
@@ -59,19 +71,23 @@ class BotWidget extends StatelessWidget {
         preferredSize: Size.fromHeight(25.0),
         child: BotSliderWidget(),
       ),
-      backgroundColor: Colors.white54,
-      body: MessagesWidget(bot: bot, inputOpened: inputOpened),
-      floatingActionButton: FloatingActionButton.extended(
-        key: const Key('homeView_addTodo_floatingActionButton'),
-        onPressed: () {
-          BlocProvider.of<BotBloc>(context).add(inputOpened ?
-            SentMessageToBotEvent(bot.messages.last.text, bot) :
-            OpenInputForResponseToBotEvent(bot));
-        },
-        label: Text(inputOpened ? 'Send' : 'Reply'),
-        icon: Icon(inputOpened ? Icons.send : Icons.reply),
-        backgroundColor: Colors.pink,
-      ),
+      backgroundColor: const Color(0xF1F1F1F1),
+      body: MessagesWidget(bot: bot, inputOpened: inputOpened, scrollController: scrollController),
+      floatingActionButton: _buildFloatingActionButton(context, inputOpened, bot),
+    );
+  }
+
+  Widget _buildFloatingActionButton(BuildContext context, bool inputOpened, Bot bot) {
+    return inputOpened ? Container() : FloatingActionButton.extended(
+      key: const Key('homeView_addTodo_floatingActionButton'),
+      onPressed: () {
+        BlocProvider.of<BotBloc>(context).add(inputOpened ?
+        SentMessageToBotEvent(bot.messages.last.text, bot, scrollController) :
+        OpenInputForResponseToBotEvent(bot));
+      },
+      label: Text(inputOpened ? 'Send' : 'Reply'),
+      icon: Icon(inputOpened ? Icons.send : Icons.reply),
+      backgroundColor: Colors.pink,
     );
   }
 
