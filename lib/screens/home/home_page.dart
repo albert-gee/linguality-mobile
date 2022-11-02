@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double panelHeightClosed = MediaQuery.of(context).size.height - 500;
+    double panelHeightClosed = MediaQuery.of(context).size.height - 400;
 
     return Scaffold(
       appBar: AppBar(
