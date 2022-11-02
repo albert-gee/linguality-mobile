@@ -42,7 +42,7 @@ class MessagesWidget extends StatelessWidget {
                     isDelivered: true,
                     isSeen: true,
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
                   BotInputWidget(bot: bot, scrollController: scrollController,),
                 ],
               ));
