@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../models/bot.dart';
 
@@ -24,7 +25,9 @@ class SentMessageToBotEvent extends BotEvent {
   final Bot bot;
   final String textMessage;
 
-  SentMessageToBotEvent(this.textMessage, this.bot);
+  final ScrollController scrollController;
+
+  SentMessageToBotEvent(this.textMessage, this.bot, this.scrollController);
 
   @override
   List<Object> get props => [textMessage, bot];
