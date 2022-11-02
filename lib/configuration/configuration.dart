@@ -1,5 +1,5 @@
 class Configuration {
-  final String environment = 'dev-bcit'; // dev-bcit, dev-home
+  final String environment = 'dev-home'; // dev-bcit, dev-home
   late final String oauth2ServerUrl;
   late final String oauth2Realm;
   late final String oauth2ClientName;
