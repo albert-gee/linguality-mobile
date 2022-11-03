@@ -1,12 +1,15 @@
+import 'package:bot/providers/bot_provider_contract.dart';
 import 'package:flutter/material.dart';
-import 'package:linguality_mobile/screens/home/home_page.dart';
+import 'package:linguality_mobile/screens/home/home_screen.dart';
 import 'package:linguality_mobile/utils/auth/auth_service.dart';
 
 class LingualityApp extends StatelessWidget {
-
   static const String appTitle = 'Linguality';
+  final bool isAuthDisabled;
+  final BotProviderContract botProvider;
 
-  const LingualityApp({super.key});
+  const LingualityApp(
+      {super.key, required this.isAuthDisabled, required this.botProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,9 @@ class LingualityApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder<bool>(
-          future: AuthService().authenticate(),
+          future: isAuthDisabled
+              ? Future(() => true) // for testing purposes
+              : AuthService().authenticate(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             Widget returnWidget = _buildLoadingWidget();
 
@@ -24,7 +29,8 @@ class LingualityApp extends StatelessWidget {
               if (snapshot.hasData && snapshot.data == false) {
                 returnWidget = _buildErrorWidget('Authentication Error');
               } else {
-                returnWidget = const HomePage(title: appTitle);
+                returnWidget =
+                    HomeScreen(title: appTitle, botProvider: botProvider);
               }
             }
 
@@ -74,5 +80,4 @@ class LingualityApp extends StatelessWidget {
       ),
     );
   }
-
 }

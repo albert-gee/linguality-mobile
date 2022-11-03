@@ -1,14 +1,15 @@
+import 'package:bot/providers/bot_provider_contract.dart';
 import 'package:bot/widgets/bot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'board.dart';
-import '../../providers/bot_provider.dart';
 
-class HomePage extends StatelessWidget {
-    const HomePage({super.key, required this.title});
+class HomeScreen extends StatelessWidget {
+    const HomeScreen({super.key, required this.title, required this.botProvider});
 
   final String title;
+  final BotProviderContract botProvider;
 
   final double _panelHeightOpen = 50;
 
@@ -27,7 +28,7 @@ class HomePage extends StatelessWidget {
         controller: PanelController(),
 
         body: const Board(),
-        panel: BotWidget(botProvider: BotProvider()),
+        panel: BotWidget(botProvider: botProvider),
 
       ),
       // floatingActionButton: const ReplyButtonWidget()

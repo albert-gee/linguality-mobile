@@ -31,12 +31,14 @@ class BotWidget extends StatelessWidget {
       child: BlocListener<BotBloc, BotState>(
         listener: (context, state) {
           if (state is BotStateMessageResponseReceived) {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              scrollController.animateTo(
-                scrollController.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-              );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if(scrollController.hasClients) {
+                scrollController.animateTo(
+                  scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                );
+              }
             });
           }
         },
