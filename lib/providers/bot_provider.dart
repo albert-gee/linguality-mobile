@@ -41,7 +41,7 @@ class BotProvider extends BotProviderContract {
         Message(
             id: '0',
             text: "I couldn't initialize the app. Try again later",
-            userId: 'Bot',
+            userId: 'bot',
             timestamp: DateTime.now())
       ], possibleAnswers: <PossibleAnswer>{});
     }
@@ -82,7 +82,7 @@ class BotProvider extends BotProviderContract {
             message: Message(
                 id: '0',
                 text: "You are not authenticated. Please login again",
-                userId: 'Bot',
+                userId: 'bot',
                 timestamp: DateTime.now()),
             possibleAnswers: <PossibleAnswer>{});
       } else {
@@ -91,7 +91,7 @@ class BotProvider extends BotProviderContract {
             message: Message(
                 id: '0',
                 text: "I couldn't respond to your message. Try again later",
-                userId: 'Bot',
+                userId: 'bot',
                 timestamp: DateTime.now()),
             possibleAnswers: <PossibleAnswer>{
               PossibleAnswer(
