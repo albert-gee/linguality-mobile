@@ -53,7 +53,7 @@ class LingualityApp extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Text(
-                'Authenticating...',
+                'Loading...',
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 20,
