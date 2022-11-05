@@ -8,14 +8,17 @@ import 'bot_message_bubble_widget.dart';
 
 class MessagesWidget extends StatelessWidget {
   const MessagesWidget(
-      {super.key, required this.bot, this.inputOpened = false, required this.scrollController});
+      {super.key,
+      required this.bot,
+      this.inputOpened = false,
+      required this.scrollController,
+      required this.textEditingController});
 
   final Bot bot;
   final bool inputOpened;
 
   final ScrollController scrollController;
-
-
+  final TextEditingController textEditingController;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,6 @@ class MessagesWidget extends StatelessWidget {
       shrinkWrap: true,
       itemCount: messages.length,
       itemBuilder: (context, index) {
-
         final Message message = messages[index];
         if (inputOpened && index == messages.length - 1) {
           return ConstrainedBox(
@@ -43,7 +45,11 @@ class MessagesWidget extends StatelessWidget {
                     isSeen: true,
                   ),
                   const SizedBox(height: 10),
-                  BotInputWidget(bot: bot, scrollController: scrollController,),
+                  BotInputWidget(
+                    bot: bot,
+                    scrollController: scrollController,
+                    textEditingController: textEditingController,
+                  ),
                 ],
               ));
         } else {

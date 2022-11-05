@@ -7,73 +7,116 @@ import '../models/bot.dart';
 import '../models/possible_answer.dart';
 
 class BotInputWidget extends StatelessWidget {
-  const BotInputWidget({super.key, required this.bot, required this.scrollController});
+  BotInputWidget(
+      {super.key,
+      required this.bot,
+      required this.scrollController,
+      required this.textEditingController});
 
   final Bot bot;
+  final _formKey = GlobalKey<FormState>();
   final ScrollController scrollController;
+  final TextEditingController textEditingController;
 
   @override
   Widget build(BuildContext context) {
     return Container(
         color: Colors.blue,
+        padding: EdgeInsets.only(
+          top: 10,
+          right: 10,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+          left: 10,
+        ),
         child: Column(
           children: [
             if (bot.possibleAnswers.isNotEmpty)
               _buildPossibleAnswers(context, bot.possibleAnswers),
-
             _buildTextField(context),
           ],
         ));
   }
 
   Widget _buildTextField(BuildContext context) {
-    return TextField(
-      style: const TextStyle(color: Colors.white),
-      textCapitalization: TextCapitalization.sentences,
-      cursorColor: Colors.white,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        ),
-        filled: true,
-        fillColor: Color(0xFF1B78C4),
-        hintText: 'Type your message...',
-        hintStyle: TextStyle(color: Colors.white54),
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+    return Form(
+      key: _formKey,
+      child: TextFormField(
+        controller: textEditingController,
+        autocorrect: false,
+        autofocus: true,
+        textCapitalization: TextCapitalization.sentences,
+        cursorColor: Colors.white,
+        keyboardType: TextInputType.multiline,
+        maxLines: 2,
+        textInputAction: TextInputAction.newline,
 
+        onFieldSubmitted: (value) {
+          _sendMessage(context, scrollController, textEditingController.text);
+        },
+        validator: (value) {
+          return _validateMessage(value);
+        },
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          filled: true,
+          fillColor: const Color(0xFF1B78C4),
+          hintText: 'Type your message...',
+          hintStyle: const TextStyle(color: Colors.white54),
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.send, color: Colors.white70),
+            onPressed: () {
+              _sendMessage(context, scrollController, textEditingController.text);
+            },
+          ),
+        ),
       ),
-      autocorrect: false,
-      autofocus: true,
-      onSubmitted: (String textMessage) async {
-        BlocProvider.of<BotBloc>(context)
-            .add(SentMessageToBotEvent(textMessage, bot, scrollController));
-      },
     );
   }
 
   Widget _buildPossibleAnswers(
       BuildContext context, Set<PossibleAnswer> possibleAnswers) {
-    return Column(
-      children: [
-        ListView.builder(
-          reverse: true,
-          shrinkWrap: true,
-          itemCount: possibleAnswers.length,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            final possibleAnswer = possibleAnswers.elementAt(index);
-            return ElevatedButton(
-              onPressed: () {
-                BlocProvider.of<BotBloc>(context)
-                    .add(SentMessageToBotEvent(possibleAnswer.text, bot, scrollController));
-              },
-              child: Text(possibleAnswer.text),
-            );
-          },
-        ),
-        const SizedBox(height: 10),
-      ]
-    );
+    return Column(children: [
+      ListView.builder(
+        reverse: true,
+        shrinkWrap: true,
+        itemCount: possibleAnswers.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          final possibleAnswer = possibleAnswers.elementAt(index);
+          return ElevatedButton(
+            onPressed: () {
+              textEditingController.text = possibleAnswer.text;
+            },
+            child: Text(possibleAnswer.text),
+          );
+        },
+      ),
+      const SizedBox(height: 10),
+    ]);
+  }
 
+  String? _validateMessage(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please type something';
+    } else if (value.length > 100) {
+      return 'Please type something shorter';
+    }
+    return null;
+  }
+
+  void _sendMessage(
+      BuildContext context, ScrollController scrollController, String message) {
+    if (_formKey.currentState!.validate()) {
+
+      message = message.trim();
+
+      BlocProvider.of<BotBloc>(context)
+          .add(SentMessageToBotEvent(message, bot, scrollController));
+      _formKey.currentState!.reset();
+    }
   }
 }
