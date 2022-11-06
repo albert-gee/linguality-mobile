@@ -17,6 +17,7 @@ class BotWidget extends StatelessWidget {
   final BotBloc botBloc;
 
   final ScrollController scrollController = ScrollController();
+  final TextEditingController textEditingController = TextEditingController();
 
   BotWidget({Key? key, required this.botProvider}): botBloc = BotBloc(botProvider), super(key: key);
 
@@ -74,7 +75,7 @@ class BotWidget extends StatelessWidget {
         child: BotSliderWidget(),
       ),
       backgroundColor: const Color(0xF1F1F1F1),
-      body: MessagesWidget(bot: bot, inputOpened: inputOpened, scrollController: scrollController),
+      body: MessagesWidget(bot: bot, inputOpened: inputOpened, scrollController: scrollController, textEditingController: textEditingController),
       floatingActionButton: _buildFloatingActionButton(context, inputOpened, bot),
     );
   }
