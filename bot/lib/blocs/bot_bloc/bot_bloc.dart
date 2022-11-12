@@ -1,24 +1,22 @@
-import 'package:bot/providers/bot_provider_contract.dart';
+import 'package:bot/services/bot/bot_service_contract.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/bot_response.dart';
 import '../../models/message.dart';
-import '../../repositories/bot_repository.dart';
 import 'bot_event.dart';
 import 'bot_state.dart';
 
 class BotBloc extends Bloc<BotEvent, BotState> {
 
-  final BotProviderContract botProvider;
-  final BotRepository botRepository;
+  final BotServiceContract _botService;
 
-  BotBloc(this.botProvider): botRepository = BotRepository(botProvider), super(BotStateInit()) {
+  BotBloc(this._botService): super(BotStateInit()) {
 
     on<InitBotEvent>((event, emit) async {
       try {
         emit(BotStateInit());
 
-        final bot = await botRepository.init();
+        final bot = await _botService.init();
         emit(BotStateInitResponseReceived(bot));
 
       } on Error catch (e) {
@@ -44,7 +42,7 @@ class BotBloc extends Bloc<BotEvent, BotState> {
         bot.messages.add(message);
         emit(BotStateMessageSent(bot));
 
-        final BotResponse botResponse = await botRepository.respond(message);
+        final BotResponse botResponse = await _botService.respond(message);
         bot.messages.add(botResponse.message);
         bot.possibleAnswers = botResponse.possibleAnswers;
 
