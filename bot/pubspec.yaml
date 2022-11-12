@@ -1,7 +1,7 @@
 name: bot
 description: A new Flutter package project.
 version: 0.0.1
-homepage:
+homepage: 'https://www.linguality.io'
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -14,6 +14,8 @@ dependencies:
   flutter_bloc: ^8.1.1
   equatable: ^2.0.5
   flutter_staggered_animations: ^1.1.1
+  flutter_slidable: ^2.0.0
+  audioplayers: ^1.1.1
 
 dev_dependencies:
   flutter_test:
