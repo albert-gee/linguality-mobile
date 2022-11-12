@@ -1,8 +1,8 @@
-import '../models/bot.dart';
-import '../models/bot_response.dart';
-import '../models/message.dart';
-import '../providers/bot_provider_contract.dart';
-import '../repositories/bot_repository.dart';
+import '../../models/bot.dart';
+import '../../models/bot_response.dart';
+import '../../models/message.dart';
+import '../../providers/bot_provider_contract.dart';
+import '../../repositories/bot_repository.dart';
 import 'bot_service_contract.dart';
 
 class BotService implements BotServiceContract {
@@ -20,6 +20,5 @@ class BotService implements BotServiceContract {
   @override
   Future<BotResponse> respond(Message userRequest) {
     return _botRepository.respond(userRequest);
-
   }
 }
