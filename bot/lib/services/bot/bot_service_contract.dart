@@ -1,6 +1,6 @@
-import '../models/bot.dart';
-import '../models/bot_response.dart';
-import '../models/message.dart';
+import '../../models/bot.dart';
+import '../../models/bot_response.dart';
+import '../../models/message.dart';
 
 abstract class BotServiceContract {
 

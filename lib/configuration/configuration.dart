@@ -1,5 +1,5 @@
 class Configuration {
-  final String environment = 'dev-bcit'; // dev-bcit, dev-home
+  final String environment = 'dev-home'; // dev-bcit, dev-home
   late final String oauth2ServerUrl;
   late final String oauth2Realm;
   late final String oauth2ClientName;
@@ -16,8 +16,8 @@ class Configuration {
       oauth2ServerUrl = 'http://192.168.50.30:28080';
       apiServerUrl = 'http://192.168.50.30:18888';
     } else if (environment == 'dev-bcit') {
-      oauth2ServerUrl = 'http://10.65.16.168:28080';
-      apiServerUrl = 'http://10.65.16.168:18888';
+      oauth2ServerUrl = 'http://10.65.5.236:28080';
+      apiServerUrl = 'http://10.65.5.236:18888';
     } else {
       throw Exception('Unknown environment: $environment');
     }

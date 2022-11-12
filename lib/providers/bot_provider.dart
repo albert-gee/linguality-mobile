@@ -26,7 +26,7 @@ class BotProvider extends BotProviderContract {
         ApiResponse apiResponse = await api.post(
             url: '${settings.apiServerUrl}/bot/init', jwt: token);
 
-        if (apiResponse.statusCode == 200 || apiResponse.data != null) {
+        if (apiResponse.statusCode == 200 && apiResponse.data != null) {
           bot = Bot.fromJson(apiResponse.data!);
         } else {
           throw Exception('Unsuccessful bot init');
