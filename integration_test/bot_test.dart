@@ -6,25 +6,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:linguality_mobile/liguality_app.dart';
 
 import 'test_bot_provider.dart';
+import 'test_text_to_speech_provider.dart';
 
 void main() {
 
   group('end-to-end test', () {
     testWidgets('initialization', (WidgetTester tester) async {
 
-      final repository = TestBotProvider();
+      final testBotProvider = TestBotProvider();
+      final testTextToSpeechProvider = TestTextToSpeechProvider();
+
       await tester.pumpWidget(LingualityApp(
         isAuthDisabled: true,
-        botProvider: repository,
+        botProvider: testBotProvider,
+        textToSpeechProvider: testTextToSpeechProvider,
       ));
-      // await tester.pumpAndSettle();
-      // expect(find.text('Authenticating'), findsOneWidget);
 
       await tester.pumpAndSettle();
       expect(find.byType(BotWidget), findsOneWidget);
 
-      await tester.pumpAndSettle();
-      expect(find.byType(MessagesWidget), findsOneWidget);
+      // delay
+      await Future.delayed(const Duration(seconds: 1), (){});
 
       await tester.pumpAndSettle();
       expect(find.byType(MessagesWidget), findsOneWidget);
@@ -32,11 +34,12 @@ void main() {
       expect(find.byType(FloatingActionButton), findsOneWidget);
 
       await tester.pumpAndSettle();
-
       await tester.tap(find.byType(FloatingActionButton));
 
-      await tester.pumpAndSettle(const Duration(milliseconds: 3000));
+      // delay
+      await Future.delayed(const Duration(seconds: 1), (){});
 
+      await tester.pumpAndSettle();
       expect(find.byType(BotInputWidget), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);
 
@@ -45,6 +48,16 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Hey! How are you?'), findsOneWidget);
 
+      // delay
+      await Future.delayed(const Duration(seconds: 1), (){});
+
+      await tester.drag(find.text('Hey! How are you?'), const Offset(500.0, 0.0));
+      await tester.pumpAndSettle();
+      expect(find.text('Voice'), findsOneWidget);
+      expect(find.byIcon(Icons.record_voice_over), findsOneWidget);
+
+      // delay
+      await Future.delayed(const Duration(seconds: 1), (){});
     });
   });
 }
