@@ -1,4 +1,5 @@
 import 'package:bot/providers/bot_provider_contract.dart';
+import 'package:bot/providers/text_to_speech_provider_contract.dart';
 import 'package:flutter/material.dart';
 import 'package:linguality_mobile/screens/home/home_screen.dart';
 import 'package:linguality_mobile/utils/auth/auth_service.dart';
@@ -7,9 +8,10 @@ class LingualityApp extends StatelessWidget {
   static const String appTitle = 'Linguality';
   final bool isAuthDisabled;
   final BotProviderContract botProvider;
+  final TextToSpeechProviderContract textToSpeechProvider;
 
   const LingualityApp(
-      {super.key, required this.isAuthDisabled, required this.botProvider});
+      {super.key, required this.isAuthDisabled, required this.botProvider, required this.textToSpeechProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class LingualityApp extends StatelessWidget {
                 returnWidget = _buildErrorWidget('Authentication Error');
               } else {
                 returnWidget =
-                    HomeScreen(title: appTitle, botProvider: botProvider);
+                    HomeScreen(title: appTitle, botProvider: botProvider, textToSpeechProvider: textToSpeechProvider,);
               }
             }
 
