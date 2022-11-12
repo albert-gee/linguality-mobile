@@ -1,5 +1,6 @@
+import 'package:bot/providers/text_to_speech_provider_contract.dart';
+import 'package:bot/services/text_to_speech/text_to_speech_service_contract.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/bot_bloc/bot_bloc.dart';
@@ -7,23 +8,28 @@ import '../blocs/bot_bloc/bot_event.dart';
 import '../blocs/bot_bloc/bot_state.dart';
 import '../models/bot.dart';
 import '../providers/bot_provider_contract.dart';
+import '../services/bot/bot_service.dart';
+import '../services/text_to_speech/text_to_speech_service.dart';
 import 'bot_slider_widget.dart';
 import 'messages_widget.dart';
 
-
 class BotWidget extends StatelessWidget {
-
-  final BotProviderContract botProvider;
   final BotBloc botBloc;
+  final BotProviderContract botProvider;
+  final TextToSpeechProviderContract textToSpeechProvider;
+  final TextToSpeechServiceContract textToSpeechService;
 
   final ScrollController scrollController = ScrollController();
   final TextEditingController textEditingController = TextEditingController();
 
-  BotWidget({Key? key, required this.botProvider}): botBloc = BotBloc(botProvider), super(key: key);
+  BotWidget(
+      {Key? key, required this.botProvider, required this.textToSpeechProvider})
+      : botBloc = BotBloc(BotService(botProvider)),
+        textToSpeechService = TextToSpeechService(textToSpeechProvider),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     // Initialize the bot
     botBloc.add(InitBotEvent());
 
@@ -33,7 +39,7 @@ class BotWidget extends StatelessWidget {
         listener: (context, state) {
           if (state is BotStateMessageResponseReceived) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if(scrollController.hasClients) {
+              if (scrollController.hasClients) {
                 scrollController.animateTo(
                   scrollController.position.maxScrollExtent,
                   duration: const Duration(milliseconds: 300),
@@ -48,7 +54,7 @@ class BotWidget extends StatelessWidget {
             if (state is BotStateInit) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is BotStateInitResponseReceived) {
-                return _buildConversation(context, state.bot, false);
+              return _buildConversation(context, state.bot, false);
             } else if (state is BotStateInitError) {
               return Container();
             } else if (state is BotStateInputOpened) {
@@ -60,7 +66,6 @@ class BotWidget extends StatelessWidget {
             } else {
               return Container();
             }
-
           },
         ),
       ),
@@ -68,30 +73,35 @@ class BotWidget extends StatelessWidget {
   }
 
   Widget _buildConversation(BuildContext context, Bot bot, bool inputOpened) {
-
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(25.0),
         child: BotSliderWidget(),
       ),
       backgroundColor: const Color(0xF1F1F1F1),
-      body: MessagesWidget(bot: bot, inputOpened: inputOpened, scrollController: scrollController, textEditingController: textEditingController),
-      floatingActionButton: _buildFloatingActionButton(context, inputOpened, bot),
+      body: MessagesWidget(
+          bot: bot,
+          inputOpened: inputOpened,
+          scrollController: scrollController,
+          textEditingController: textEditingController,
+          textToSpeechService: textToSpeechService
+      ),
+      floatingActionButton: inputOpened
+          ? null
+          : _buildFloatingActionButton(context, bot),
     );
   }
 
-  Widget _buildFloatingActionButton(BuildContext context, bool inputOpened, Bot bot) {
-    return inputOpened ? Container() : FloatingActionButton.extended(
-      key: const Key('homeView_addTodo_floatingActionButton'),
-      onPressed: () {
-        BlocProvider.of<BotBloc>(context).add(inputOpened ?
-        SentMessageToBotEvent(bot.messages.last.text, bot, scrollController) :
-        OpenInputForResponseToBotEvent(bot));
-      },
-      label: Text(inputOpened ? 'Send' : 'Reply'),
-      icon: Icon(inputOpened ? Icons.send : Icons.reply),
-      backgroundColor: Colors.pink,
-    );
+  Widget _buildFloatingActionButton(
+      BuildContext context, Bot bot) {
+    return FloatingActionButton.extended(
+            key: const Key('homeView_addTodo_floatingActionButton'),
+            onPressed: () {
+              BlocProvider.of<BotBloc>(context).add(OpenInputForResponseToBotEvent(bot));
+            },
+            label: const Text('Reply'),
+            icon: const Icon(Icons.reply),
+            backgroundColor: Colors.pink,
+          );
   }
-
 }

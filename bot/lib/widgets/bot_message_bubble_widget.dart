@@ -1,17 +1,21 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:bot/services/text_to_speech/text_to_speech_service_contract.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../models/message.dart';
 
 class BotMessageBubbleWidget extends StatelessWidget {
-  const BotMessageBubbleWidget(
-      {Key? key,
-      required this.message,
-      required this.isSent,
-      required this.isDelivered,
-      required this.isSeen})
+  const BotMessageBubbleWidget({Key? key,
+    required this.message,
+    required this.isSent,
+    required this.isDelivered,
+    required this.isSeen,
+    required this.textToSpeechService})
       : super(key: key);
 
   final Message message;
+  final TextToSpeechServiceContract textToSpeechService;
 
   final bool isSent;
   final bool isDelivered;
@@ -20,33 +24,81 @@ class BotMessageBubbleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment:
-            (message.userId == 'bot') ? Alignment.topLeft : Alignment.topRight,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          width: MediaQuery.of(context).size.width * 0.9,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: const Color(0xEEFDFDFD),
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 2,
-                blurRadius: 4,
-                offset: const Offset(0, 1), // changes position of shadow
+        alignment: (message.userId == 'bot') ? Alignment.topLeft : Alignment.topRight,
+        child: _buildSlidableContainer(context)
+    );
+  }
+
+  Widget _buildSlidableContainer(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Slidable(
+          // Specify a key if the Slidable is dismissible.
+          key: const ValueKey(0),
+
+          // The start action pane is the one at the left or the top side.
+          startActionPane: ActionPane(
+            // A motion is a widget used to control how the pane animates.
+            motion: const ScrollMotion(),
+
+            // A pane can dismiss the Slidable.
+            // dismissible: DismissiblePane(onDismissed: () {}),
+
+            // All actions are defined in the children parameter.
+            children: [
+              // A SlidableAction can have an icon and/or a label.
+              SlidableAction(
+                onPressed: (context) {
+                  textToSpeechService.convert(message.text).then((value) {
+                    print(value);
+                    AudioPlayer audioPlayer = AudioPlayer();
+                    audioPlayer.play(DeviceFileSource(value));
+                    audioPlayer.resume();
+                  })
+                      .catchError((error) {
+                    print(error);
+                  });
+                },
+                backgroundColor: const Color(0xFF21B7CA),
+                foregroundColor: Colors.white,
+                icon: Icons.record_voice_over,
+                label: 'Voice',
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTextMessage(),
-              const SizedBox(height: 15),
-              _buildBottomRow(),
-            ],
+
+          // The child of the Slidable is what the user sees when the
+          // component is not dragged.
+          child: _buildMessageContainer(),
+        )
+    );
+  }
+
+  Widget _buildMessageContainer() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xEEFDFDFD),
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: const Offset(0, 1), // changes position of shadow
           ),
-        ));
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTextMessage(),
+          const SizedBox(height: 15),
+          _buildMessageContainerBottomRow(),
+        ],
+      ),
+    );
   }
 
   Widget _buildTextMessage() {
@@ -61,7 +113,7 @@ class BotMessageBubbleWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomRow() {
+  Widget _buildMessageContainerBottomRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: const [
