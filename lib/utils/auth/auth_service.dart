@@ -9,6 +9,10 @@ class AuthService {
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
 
+  Future<String?> getAccessToken() async {
+    return await keyStorage.read(settings.secureStorageKeyAccessToken);
+  }
+
   Future<bool> authenticate() async {
     String? accessToken = await keyStorage.read(settings.secureStorageKeyAccessToken);
     String? refreshToken = await keyStorage.read(settings.secureStorageKeyRefreshToken);
