@@ -1,10 +1,12 @@
+import 'package:board/board.dart';
 import 'package:bot/providers/bot_provider_contract.dart';
 import 'package:bot/providers/text_to_speech_provider_contract.dart';
 import 'package:bot/widgets/bot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import 'board.dart';
+import '../../providers/article_provider.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen(
@@ -32,7 +34,9 @@ class HomeScreen extends StatelessWidget {
         maxHeight: panelHeightClosed,
         defaultPanelState: PanelState.OPEN,
         controller: PanelController(),
-        body: const Board(),
+        body: Board(
+          articleProvider: ArticleProvider(),
+        ),
         panel: BotWidget(
           botProvider: botProvider,
           textToSpeechProvider: textToSpeechProvider,
