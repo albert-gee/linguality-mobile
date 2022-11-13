@@ -28,6 +28,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        titleSpacing: 0,
+        leading: const Icon(
+          Icons.psychology,
+        ),
       ),
       body: SlidingUpPanel(
         minHeight: _panelHeightOpen,
