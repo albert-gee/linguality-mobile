@@ -1,4 +1,4 @@
-import 'package:board/board.dart';
+import 'package:board/widgets/board.dart';
 import 'package:bot/providers/bot_provider_contract.dart';
 import 'package:bot/providers/text_to_speech_provider_contract.dart';
 import 'package:bot/widgets/bot_widget.dart';
