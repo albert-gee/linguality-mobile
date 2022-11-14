@@ -12,7 +12,7 @@ class LatestArticlesWidget  extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 252,
+        height: 262,
       ),
       items: articles.map((article) {
         return _buildArticle(context, article.imageUrl, article.title);
@@ -31,23 +31,30 @@ class LatestArticlesWidget  extends StatelessWidget {
   }
 
   Widget _buildArticleCard(BuildContext context, String imageUrl) {
-    return SizedBox(
+    return GestureDetector(
+      onTap: () {
+        print('GESTURE');
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+        width: 300,
         height: 200,
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          elevation: 5,
-          margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.fill,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
             ),
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
           ),
-        )
+        ),
+      ),
     );
   }
 
