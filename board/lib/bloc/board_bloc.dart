@@ -6,26 +6,32 @@ import 'package:meta/meta.dart';
 import '../models/article.dart';
 import '../services/article_service.dart';
 
-part 'articles_event.dart';
-part 'articles_state.dart';
+part 'board_event.dart';
+part 'board_state.dart';
 
-class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
+class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
   final ArticleProviderContract articleProvider;
   final ArticleService articleService;
 
-  ArticlesBloc({required this.articleProvider})
+  BoardBloc({required this.articleProvider})
       : articleService = ArticleService(articleProvider: articleProvider),
-        super(ArticlesInitialState()
+        super(BoardInitialState()
   ) {
 
     on<InitArticlesEvent>((event, emit) async {
-      emit(ArticlesInitialState());
+      emit(BoardInitialState());
       final List<Article> articles = await articleService.fetchArticles();
       emit(ArticlesLoadedState(articles));
     });
 
     on<InitArticlesCompletedEvent>((event, emit) async {
+    });
+
+    on<OpenArticleEvent>((event, emit) async {
+      emit(OpenArticleInitState());
+      final Article article = await articleService.fetchArticle(event.articleId);
+      emit(OpenArticleCompletedState(article));
     });
 
   }
