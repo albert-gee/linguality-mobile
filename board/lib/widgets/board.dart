@@ -1,7 +1,7 @@
 import 'package:board/bloc/articles_bloc.dart';
 import 'package:board/providers/article_provider_contract.dart';
 import 'package:board/widgets/latest_articles_widget.dart';
-import 'package:board/widgets/section_title.dart';
+import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:panorama/panorama.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +34,7 @@ class Board extends StatelessWidget {
             if (state is ArticlesInitialState) {
               return Column(
                 children: const <Widget>[
-                  SectionTitle(title: 'Latest Articles'),
+                  SectionTitleWidget(title: 'Latest Articles'),
                   SizedBox(
                     height: 252,
                     child: Center(child: CircularProgressIndicator()),
@@ -44,7 +44,7 @@ class Board extends StatelessWidget {
             } else if (state is ArticlesLoadedState) {
               return Column(
                 children: <Widget>[
-                  const SectionTitle(title: 'Latest Articles'),
+                  const SectionTitleWidget(title: 'Latest Articles'),
                   LatestArticlesWidget(
                       articles: state.articles
                   ),

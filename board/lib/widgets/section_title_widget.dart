@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class SectionTitle extends StatelessWidget {
-  const SectionTitle({super.key, required this.title});
+class SectionTitleWidget extends StatelessWidget {
+  const SectionTitleWidget({super.key, required this.title});
 
   final String title;
 
