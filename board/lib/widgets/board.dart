@@ -1,5 +1,6 @@
-import 'package:board/bloc/articles_bloc.dart';
+import 'package:board/bloc/board_bloc.dart';
 import 'package:board/providers/article_provider_contract.dart';
+import 'package:board/widgets/article_widget.dart';
 import 'package:board/widgets/latest_articles_widget.dart';
 import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
@@ -9,29 +10,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Board extends StatelessWidget {
   Board({super.key, required this.articleProvider})
-      : articlesBloc = ArticlesBloc(articleProvider: articleProvider);
+      : boardBloc = BoardBloc(articleProvider: articleProvider);
 
   final ArticleProviderContract articleProvider;
-  final ArticlesBloc articlesBloc;
+  final BoardBloc boardBloc;
 
   @override
   Widget build(BuildContext context) {
-    articlesBloc.add(InitArticlesEvent());
+    boardBloc.add(InitArticlesEvent());
 
     return BlocProvider(
-      create: (_) => articlesBloc,
-      child: BlocListener<ArticlesBloc, ArticlesState>(
+      create: (_) => boardBloc,
+      child: BlocListener<BoardBloc, BoardState>(
         listener: (context, state) {
-          if (state is ArticlesInitialState) {
+          if (state is BoardInitialState) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               /// ToDo
             });
           }
         },
-        child: BlocBuilder<ArticlesBloc, ArticlesState>(
+        child: BlocBuilder<BoardBloc, BoardState>(
           builder: (context, state) {
 
-            if (state is ArticlesInitialState) {
+            if (state is BoardInitialState) {
               return Column(
                 children: const <Widget>[
                   SectionTitleWidget(title: 'Latest Articles'),
@@ -46,10 +47,23 @@ class Board extends StatelessWidget {
                 children: <Widget>[
                   const SectionTitleWidget(title: 'Latest Articles'),
                   LatestArticlesWidget(
-                      articles: state.articles
+                    boardBloc: boardBloc,
+                    articles: state.articles
                   ),
                 ],
               );
+            } else if (state is OpenArticleInitState) {
+              return Column(
+                children: const <Widget>[
+                  SectionTitleWidget(title: 'Latest Articles'),
+                  SizedBox(
+                    height: 252,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                ],
+              );
+            } else if (state is OpenArticleCompletedState) {
+              return ArticleWidget(article: state.article);
             } else {
               return Container();
             }
