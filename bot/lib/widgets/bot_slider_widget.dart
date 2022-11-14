@@ -5,45 +5,28 @@ class BotSliderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
-
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            spreadRadius: 2.5,
-            blurRadius: 10,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20), bottom: Radius.circular(0)),
       ),
-      child: Column(
-          children: [
-            const SizedBox(height: 10.0),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 30,
-                  height: 5,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: const BorderRadius.all(Radius.circular(12.0))
-                  ),
-                ),
-              ],
+      child: Column(children: [
+        const SizedBox(height: 7.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 30,
+              height: 5,
+              decoration:
+                  BoxDecoration(color: Colors.grey[300], borderRadius: const BorderRadius.all(Radius.circular(12.0))),
             ),
-
-            const SizedBox(
-              height: 10.0,
-            )
-          ]
-      ),
+          ],
+        ),
+        const SizedBox(
+          height: 7.0,
+        )
+      ]),
     );
-
   }
-
 }

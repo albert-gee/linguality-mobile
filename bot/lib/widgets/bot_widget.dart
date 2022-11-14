@@ -10,8 +10,9 @@ import '../models/bot.dart';
 import '../providers/bot_provider_contract.dart';
 import '../services/bot/bot_service.dart';
 import '../services/text_to_speech/text_to_speech_service.dart';
+import 'bot_input_widget.dart';
 import 'bot_slider_widget.dart';
-import 'messages_widget.dart';
+import 'bot_messages_widget.dart';
 
 class BotWidget extends StatelessWidget {
   final BotBloc botBloc;
@@ -37,17 +38,6 @@ class BotWidget extends StatelessWidget {
       create: (_) => botBloc,
       child: BlocListener<BotBloc, BotState>(
         listener: (context, state) {
-          if (state is BotStateMessageResponseReceived) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (scrollController.hasClients) {
-                scrollController.animateTo(
-                  scrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                );
-              }
-            });
-          }
         },
         child: BlocBuilder<BotBloc, BotState>(
           builder: (context, state) {
@@ -58,10 +48,12 @@ class BotWidget extends StatelessWidget {
             } else if (state is BotStateInitError) {
               return Container();
             } else if (state is BotStateInputOpened) {
+              _scrollToBottom();
               return _buildConversation(context, state.bot, true);
             } else if (state is BotStateMessageSent) {
               return _buildConversation(context, state.bot, false);
             } else if (state is BotStateMessageResponseReceived) {
+              _scrollToBottom();
               return _buildConversation(context, state.bot, false);
             } else {
               return Container();
@@ -72,19 +64,37 @@ class BotWidget extends StatelessWidget {
     );
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   Widget _buildConversation(BuildContext context, Bot bot, bool inputOpened) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(25.0),
-        child: BotSliderWidget(),
-      ),
-      backgroundColor: const Color(0xF1F1F1F1),
-      body: MessagesWidget(
-          bot: bot,
-          inputOpened: inputOpened,
-          scrollController: scrollController,
-          textEditingController: textEditingController,
-          textToSpeechService: textToSpeechService
+      backgroundColor: Colors.transparent,
+      body: Column(
+          children: [
+            const BotSliderWidget(),
+            BotMessagesWidget(
+                bot: bot,
+                inputOpened: inputOpened,
+                scrollController: scrollController,
+                textEditingController: textEditingController,
+                textToSpeechService: textToSpeechService
+            ),
+            inputOpened ? BotInputWidget(
+              bot: bot,
+              scrollController: scrollController,
+              textEditingController: textEditingController,
+            ) : Container()
+          ]
       ),
       floatingActionButton: inputOpened
           ? null
@@ -95,13 +105,14 @@ class BotWidget extends StatelessWidget {
   Widget _buildFloatingActionButton(
       BuildContext context, Bot bot) {
     return FloatingActionButton.extended(
-            key: const Key('homeView_addTodo_floatingActionButton'),
-            onPressed: () {
-              BlocProvider.of<BotBloc>(context).add(OpenInputForResponseToBotEvent(bot));
-            },
-            label: const Text('Reply'),
-            icon: const Icon(Icons.reply),
-            backgroundColor: Colors.pink,
-          );
+      key: const Key('homeView_addTodo_floatingActionButton'),
+      onPressed: () {
+        BlocProvider.of<BotBloc>(context).add(OpenInputForResponseToBotEvent(bot));
+      },
+
+      label: const Text('Reply'),
+      icon: const Icon(Icons.reply),
+      backgroundColor: Colors.pink,
+    );
   }
 }
