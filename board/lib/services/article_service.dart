@@ -9,4 +9,8 @@ class ArticleService {
   Future<List<Article>> fetchArticles() async {
     return await articleProvider.fetchArticles();
   }
+
+  Future<Article> fetchArticle(String articleId) async {
+    return await articleProvider.fetchArticle(articleId);
+  }
 }
