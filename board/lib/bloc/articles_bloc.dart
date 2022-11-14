@@ -18,22 +18,14 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
       : articleService = ArticleService(articleProvider: articleProvider),
         super(ArticlesInitialState()
   ) {
-    print('===ArticlesBloc===');
 
     on<InitArticlesEvent>((event, emit) async {
-      print('ON InitArticlesEvent');
-
-      
       emit(ArticlesInitialState());
-
-
       final List<Article> articles = await articleService.fetchArticles();
       emit(ArticlesLoadedState(articles));
     });
 
     on<InitArticlesCompletedEvent>((event, emit) async {
-
-      print('ON InitArticlesCompletedEvent');
     });
 
   }
