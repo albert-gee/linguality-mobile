@@ -1,12 +1,14 @@
+import 'package:board/bloc/board_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../models/article.dart';
 
 class LatestArticlesWidget  extends StatelessWidget {
-  const LatestArticlesWidget({super.key, required this.articles});
+  const LatestArticlesWidget({super.key, required this.articles, required this.boardBloc});
 
   final List<Article> articles;
+  final BoardBloc boardBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -15,24 +17,25 @@ class LatestArticlesWidget  extends StatelessWidget {
         height: 262,
       ),
       items: articles.map((article) {
-        return _buildArticle(context, article.imageUrl, article.title);
+        return _buildArticle(context, article.imageUrl, article.id, article.title);
       }).toList(),
 
     );
   }
 
-  Widget _buildArticle(BuildContext context, String imageUrl, String articleTitle) {
+  Widget _buildArticle(BuildContext context, String imageUrl, String articleId, String articleTitle) {
     return Column(
       children: <Widget>[
-        _buildArticleCard(context, imageUrl),
+        _buildArticleCard(context, imageUrl, articleId),
         _buildArticleTitle(context, articleTitle),
       ],
     );
   }
 
-  Widget _buildArticleCard(BuildContext context, String imageUrl) {
+  Widget _buildArticleCard(BuildContext context, String imageUrl, String articleId) {
     return GestureDetector(
       onTap: () {
+        boardBloc.add(OpenArticleEvent(articleId));
         print('GESTURE');
       },
       child: Container(
