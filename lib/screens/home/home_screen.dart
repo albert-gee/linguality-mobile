@@ -34,6 +34,10 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: SlidingUpPanel(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
         minHeight: _panelHeightOpen,
         maxHeight: panelHeightClosed,
         defaultPanelState: PanelState.OPEN,
