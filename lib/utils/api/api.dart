@@ -45,6 +45,39 @@ class Api {
     return apiResponse;
   }
 
+  Future<ApiResponse> get({required String url}) async {
+
+    ApiResponse apiResponse;
+
+    try {
+      await auth.authenticate();
+      var jwt = await auth.getAccessToken();
+      if (jwt == null) {
+        throw Exception("Unauthenticated");
+      }
+
+      Response response = await _dio.get(url,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": ("Bearer $jwt"),
+          }));
+
+      apiResponse = ApiResponse(
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          data: response.data);
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+      apiResponse = ApiResponse(
+          statusCode: 500,
+          statusMessage: "Internal Server Error",
+          data: null);
+    }
+
+    return apiResponse;
+  }
+
   /// Send post request, download file, and save to temporary directory
   Future<ApiResponse> postDownload(
       {required String url, required String tempFilePath, Map<String,
