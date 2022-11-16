@@ -18,7 +18,7 @@ class LingualityApp extends StatelessWidget {
     return MaterialApp(
       title: appTitle,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       home: FutureBuilder<bool>(
           future: isAuthDisabled
