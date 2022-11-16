@@ -6,12 +6,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../models/message.dart';
 
 class BotMessageBubbleWidget extends StatelessWidget {
-  const BotMessageBubbleWidget({Key? key,
-    required this.message,
-    required this.isSent,
-    required this.isDelivered,
-    required this.isSeen,
-    required this.textToSpeechService})
+  const BotMessageBubbleWidget(
+      {Key? key,
+      required this.message,
+      required this.isSent,
+      required this.isDelivered,
+      required this.isSeen,
+      required this.textToSpeechService})
       : super(key: key);
 
   final Message message;
@@ -25,8 +26,7 @@ class BotMessageBubbleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
         alignment: (message.userId == 'bot') ? Alignment.topLeft : Alignment.topRight,
-        child: _buildSlidableContainer(context)
-    );
+        child: _buildSlidableContainer(context));
   }
 
   Widget _buildSlidableContainer(BuildContext context) {
@@ -51,12 +51,9 @@ class BotMessageBubbleWidget extends StatelessWidget {
               SlidableAction(
                 onPressed: (context) {
                   textToSpeechService.convert(message.text).then((value) {
-                    print(value);
                     AudioPlayer audioPlayer = AudioPlayer();
                     audioPlayer.play(DeviceFileSource(value));
-                    audioPlayer.resume();
-                  })
-                      .catchError((error) {
+                  }).catchError((error) {
                     print(error);
                   });
                 },
@@ -71,19 +68,18 @@ class BotMessageBubbleWidget extends StatelessWidget {
           // The child of the Slidable is what the user sees when the
           // component is not dragged.
           child: _buildMessageContainer(),
-        )
-    );
+        ));
   }
 
   Widget _buildMessageContainer() {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xEEFDFDFD),
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.25),
             spreadRadius: 2,
             blurRadius: 4,
             offset: const Offset(0, 1), // changes position of shadow

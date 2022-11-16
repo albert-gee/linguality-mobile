@@ -30,8 +30,8 @@ class BotInputWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            if (bot.possibleAnswers.isNotEmpty)
-              _buildPossibleAnswers(context, bot.possibleAnswers),
+            // if (bot.possibleAnswers.isNotEmpty)
+            //   _buildPossibleAnswers(context, bot.possibleAnswers),
             _buildTextField(context),
           ],
         ));
@@ -75,28 +75,6 @@ class BotInputWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildPossibleAnswers(
-      BuildContext context, Set<PossibleAnswer> possibleAnswers) {
-    return Column(children: [
-      ListView.builder(
-        reverse: true,
-        shrinkWrap: true,
-        itemCount: possibleAnswers.length,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, index) {
-          final possibleAnswer = possibleAnswers.elementAt(index);
-          return ElevatedButton(
-            onPressed: () {
-              textEditingController.text = possibleAnswer.text;
-            },
-            child: Text(possibleAnswer.text),
-          );
-        },
-      ),
-      const SizedBox(height: 10),
-    ]);
   }
 
   String? _validateMessage(String? value) {
