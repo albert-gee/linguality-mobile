@@ -5,7 +5,6 @@ import '../../configuration/configuration.dart';
 import '../key_storage.dart';
 
 class AuthService {
-
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
 
@@ -20,7 +19,10 @@ class AuthService {
 
     // Check if token is saved in secure storage. If not, authenticate with
     // browser. Otherwise update the token
-    if (accessToken == null || refreshToken == null || expiresAt == null || DateTime.parse(expiresAt).isBefore(DateTime.now())) {
+    if (accessToken == null ||
+        refreshToken == null ||
+        expiresAt == null ||
+        DateTime.parse(expiresAt).isBefore(DateTime.now())) {
       try {
         await authenticateWithBrowser();
       } catch (e) {
@@ -29,7 +31,8 @@ class AuthService {
     } else {
       try {
         await _updateToken(accessToken, refreshToken, expiresAt);
-      } catch (error) { // If token update fails, authenticate with browser
+      } catch (error) {
+        // If token update fails, authenticate with browser
         try {
           await authenticateWithBrowser();
         } catch (e) {
@@ -42,9 +45,13 @@ class AuthService {
   }
 
   Future<Client> _getClient() async {
-    Issuer issuer = await Issuer.discover(Uri.parse(
-        '${settings.oauth2ServerUrl}/realms/${settings.oauth2Realm}'));
-    return Client(issuer, settings.oauth2ClientName, clientSecret: settings.oauth2ClientSecret);
+    Issuer issuer = await Issuer.discover(Uri.parse('${settings.oauth2ServerUrl}/realms/${settings.oauth2Realm}'));
+
+    return Client(
+      issuer,
+      settings.oauth2ClientName,
+      clientSecret: settings.oauth2ClientSecret,
+    );
   }
 
   Future<void> _writeTokens(TokenResponse tokenResponse) async {
@@ -79,8 +86,11 @@ class AuthService {
     }
 
     // create an authenticator
-    var authenticator = Authenticator(client,
-        scopes: settings.oauth2ClientScopes, urlLancher: urlLauncher);
+    var authenticator = Authenticator(
+      client,
+      scopes: settings.oauth2ClientScopes,
+      urlLancher: urlLauncher,
+    );
 
     // starts the authentication
     var credential = await authenticator.authorize();

@@ -7,13 +7,13 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../providers/article_provider.dart';
 
-
 class HomeScreen extends StatelessWidget {
-  const HomeScreen(
-      {super.key,
-      required this.title,
-      required this.botProvider,
-      required this.textToSpeechProvider});
+  const HomeScreen({
+    super.key,
+    required this.title,
+    required this.botProvider,
+    required this.textToSpeechProvider,
+  });
 
   final String title;
   final BotProviderContract botProvider;

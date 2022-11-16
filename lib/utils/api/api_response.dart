@@ -7,6 +7,6 @@ class ApiResponse {
   ApiResponse({
     this.data,
     this.statusCode,
-    this.statusMessage
+    this.statusMessage,
   });
 }

@@ -10,8 +10,12 @@ class LingualityApp extends StatelessWidget {
   final BotProviderContract botProvider;
   final TextToSpeechProviderContract textToSpeechProvider;
 
-  const LingualityApp(
-      {super.key, required this.isAuthDisabled, required this.botProvider, required this.textToSpeechProvider});
+  const LingualityApp({
+    super.key,
+    required this.isAuthDisabled,
+    required this.botProvider,
+    required this.textToSpeechProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,23 +25,26 @@ class LingualityApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       home: FutureBuilder<bool>(
-          future: isAuthDisabled
-              ? Future(() => true) // for testing purposes
-              : AuthService().authenticate(),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            Widget returnWidget = _buildLoadingWidget();
+        future: (isAuthDisabled ? Future(() => true) : AuthService().authenticate()), // for testing purposes
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<bool> snapshot,
+        ) {
+          Widget returnWidget = _buildLoadingWidget();
 
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData && snapshot.data == false) {
-                returnWidget = _buildErrorWidget('Authentication Error');
-              } else {
-                returnWidget =
-                    HomeScreen(title: appTitle, botProvider: botProvider, textToSpeechProvider: textToSpeechProvider,);
-              }
-            }
+          if (snapshot.connectionState == ConnectionState.done) {
+            returnWidget = (snapshot.hasData && snapshot.data == false)
+                ? _buildErrorWidget('Authentication Error')
+                : HomeScreen(
+                    title: appTitle,
+                    botProvider: botProvider,
+                    textToSpeechProvider: textToSpeechProvider,
+                  );
+          }
 
-            return returnWidget;
-          }),
+          return returnWidget;
+        },
+      ),
     );
   }
 

@@ -25,9 +25,12 @@ class TextToSpeechProvider extends TextToSpeechProviderContract {
       return tempFilePath;
     } else {
       ApiResponse apiResponse = await api.postDownload(
-          url: '${settings.apiServerUrl}/tts',
-          tempFilePath: tempFilePath,
-          data: {'inputText': inputText});
+        url: '${settings.apiServerUrl}/tts',
+        tempFilePath: tempFilePath,
+        data: {
+          'inputText': inputText,
+        },
+      );
 
       if (apiResponse.statusCode == 200 && apiResponse.data == tempFilePath) {
         return apiResponse.data;
@@ -35,6 +38,5 @@ class TextToSpeechProvider extends TextToSpeechProviderContract {
         throw Exception('Unsuccessful text to speech conversion');
       }
     }
-
   }
 }

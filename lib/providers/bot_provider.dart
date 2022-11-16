@@ -28,10 +28,17 @@ class BotProvider extends BotProviderContract {
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
 
-      bot = Bot(messages: [
-        Message(
-            id: '0', text: "I couldn't initialize the app. Try again later", userId: 'bot', timestamp: DateTime.now())
-      ], possibleAnswers: <PossibleAnswer>{});
+      bot = Bot(
+        messages: [
+          Message(
+            id: '0',
+            text: "I couldn't initialize the app. Try again later",
+            userId: 'bot',
+            timestamp: DateTime.now(),
+          ),
+        ],
+        possibleAnswers: <PossibleAnswer>{},
+      );
     }
 
     return bot;
@@ -58,28 +65,24 @@ class BotProvider extends BotProviderContract {
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
 
-      if (error.toString() == "Unauthenticated") {
-        botResponse = BotResponse(
-            message: Message(
-                id: '0',
-                text: "You are not authenticated. Please login again",
-                userId: 'bot',
-                timestamp: DateTime.now()),
-            possibleAnswers: <PossibleAnswer>{});
-      } else {
-        botResponse = BotResponse(
-            message: Message(
-                id: '0',
-                text: "I couldn't respond to your message. Try again later",
-                userId: 'bot',
-                timestamp: DateTime.now()),
-            possibleAnswers: <PossibleAnswer>{
-              PossibleAnswer(
-                id: '0',
-                text: "Ok, thanks.",
-              )
-            });
-      }
+      botResponse = BotResponse(
+        message: Message(
+          id: '0',
+          text: (error.toString() == "Unauthenticated")
+              ? "You are not authenticated. Please login again"
+              : "I couldn't respond to your message. Try again later",
+          userId: 'bot',
+          timestamp: DateTime.now(),
+        ),
+        possibleAnswers: (error.toString() == "Unauthenticated")
+            ? <PossibleAnswer>{}
+            : <PossibleAnswer>{
+                PossibleAnswer(
+                  id: '0',
+                  text: "Ok, thanks.",
+                ),
+              },
+      );
     }
 
     return botResponse;

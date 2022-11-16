@@ -18,6 +18,7 @@ class ArticleProvider extends ArticleProviderContract {
 
     if (apiResponse.statusCode == 200) {
       List<Article> articles = (apiResponse.data as List).map((article) => Article.fromJson(article)).toList();
+
       return articles;
     } else {
       throw Exception('Couldn\'t fetch articles');
