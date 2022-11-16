@@ -18,4 +18,4 @@ jobs:
           folders: "lib, bot/lib, board/lib"
           pull_request_comment: true
           check_unused_files: true
-          check_unused_files_folders: "lib, bot/lib, board/lib"
+          check_unused_files_folders: "lib"
