@@ -1,4 +1,3 @@
-import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../models/article.dart';
@@ -10,30 +9,105 @@ class ArticleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        SectionTitleWidget(title: article.title),
-        Container(
-          margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-          width: 300,
-          height: 200,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 3,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
+    return SingleChildScrollView(
+        controller: ScrollController(),
+        child: Container(
+          color: Colors.blueGrey[50],
+          child: Column(
+            children: <Widget>[
+              _buildArticleTitle(),
+              _buildButtonsContainer(),
+              _buildArticleImage(),
+              _buildArticleParagraphs(),
+            ],
+          ),
+        )
+    );
+  }
+
+  _buildArticleTitle() {
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
+      child: Text(
+        article.title,
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
+    );
+  }
+
+  _buildButtonsContainer() {
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          const Text(
+              '7 min read',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                color: Colors.orange,
+              )
+          ),
+          Row(
+            children: const <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: Icon(
+                      Icons.play_circle,
+                      color: Colors.orange)
+              ),
+              Text(
+                  'Listen',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  )
               ),
             ],
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            image: DecorationImage(
-              image: NetworkImage(article.imageUrl),
-              fit: BoxFit.cover,
-            ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  _buildArticleImage() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Image.network(article.imageUrl),
+    );
+  }
+
+  Widget _buildArticleParagraphs() {
+    return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.only(bottom: 130),
+        child: Column(
+          children: article.paragraphs.map((paragraph) {
+            return Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+              margin: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                paragraph.text,
+                style: const TextStyle(
+                  fontSize: 21,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            );
+          }).toList(),
+        )
     );
   }
 }

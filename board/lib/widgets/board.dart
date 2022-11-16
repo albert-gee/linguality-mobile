@@ -4,7 +4,6 @@ import 'package:board/widgets/article_widget.dart';
 import 'package:board/widgets/latest_articles_widget.dart';
 import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:panorama/panorama.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
@@ -33,16 +32,15 @@ class Board extends StatelessWidget {
           builder: (context, state) {
 
             if (state is BoardInitialState) {
+              /// BoardInitialState
               return Column(
-                children: const <Widget>[
-                  SectionTitleWidget(title: 'Latest Articles'),
-                  SizedBox(
-                    height: 252,
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
+                children: <Widget>[
+                  const SectionTitleWidget(title: 'Latest Articles'),
+                  _addProgressBar(),
                 ],
               );
             } else if (state is ArticlesLoadedState) {
+              /// ArticlesLoadedState
               return Column(
                 children: <Widget>[
                   const SectionTitleWidget(title: 'Latest Articles'),
@@ -53,16 +51,15 @@ class Board extends StatelessWidget {
                 ],
               );
             } else if (state is OpenArticleInitState) {
+              /// OpenArticleInitState
               return Column(
-                children: const <Widget>[
-                  SectionTitleWidget(title: 'Latest Articles'),
-                  SizedBox(
-                    height: 252,
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
+                children: <Widget>[
+                  const SectionTitleWidget(title: 'Latest Articles'),
+                  _addProgressBar(),
                 ],
               );
             } else if (state is OpenArticleCompletedState) {
+              /// OpenArticleCompletedState
               return ArticleWidget(article: state.article);
             } else {
               return Container();
@@ -72,9 +69,14 @@ class Board extends StatelessWidget {
       ),
     );
 
-
-
     // return _buildPanorama();
+  }
+
+  Widget _addProgressBar() {
+    return const SizedBox(
+      height: 252,
+      child: Center(child: CircularProgressIndicator()),
+    );
   }
 
   // Widget _buildPanorama() {

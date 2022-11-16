@@ -14,55 +14,58 @@ class LatestArticlesWidget  extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 262,
+        height: 292,
       ),
       items: articles.map((article) {
-        return _buildArticle(context, article.imageUrl, article.id, article.title);
+        return _buildArticleCard(context, article.imageUrl, article.id.toString(), article.title);
       }).toList(),
 
     );
   }
 
-  Widget _buildArticle(BuildContext context, String imageUrl, String articleId, String articleTitle) {
-    return Column(
-      children: <Widget>[
-        _buildArticleCard(context, imageUrl, articleId),
-        _buildArticleTitle(context, articleTitle),
-      ],
+  Widget _buildArticleCard(BuildContext context, String imageUrl, String articleId, String articleTitle) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      width: 300,
+      height: 280,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 3,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Column(
+        children: <Widget>[
+          _buildArticleCardImage(imageUrl, articleId),
+          _buildArticleCardTitle(context, articleTitle),
+        ],
+      )
     );
   }
 
-  Widget _buildArticleCard(BuildContext context, String imageUrl, String articleId) {
+  Widget _buildArticleCardImage(String imageUrl, String articleId) {
     return GestureDetector(
       onTap: () {
-        boardBloc.add(OpenArticleEvent(articleId));
-        print('GESTURE');
+        _tapArticle(articleId);
       },
-      child: Container(
-        margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-        width: 300,
+      child: SizedBox(
+        width: 280,
         height: 200,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          image: DecorationImage(
-            image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
+        child: Image.network(imageUrl, fit: BoxFit.cover),
+      )
     );
   }
 
-  Widget _buildArticleTitle(BuildContext context, String articleTitle) {
+  Widget _buildArticleCardTitle(BuildContext context, String articleTitle) {
     return Container(
+      height: 32,
       margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: Align(
         alignment: Alignment.topLeft,
@@ -70,11 +73,16 @@ class LatestArticlesWidget  extends StatelessWidget {
           articleTitle,
           maxLines: 2,
           style: const TextStyle(
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.normal,
           ),
         ),
       ),
     );
+  }
+
+
+  void _tapArticle(String articleId) {
+    boardBloc.add(OpenArticleEvent(articleId));
   }
 }
