@@ -7,7 +7,7 @@ class BotSliderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Colors.blueGrey,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20), bottom: Radius.circular(0)),
       ),
       child: Column(children: [
