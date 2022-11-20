@@ -1,7 +1,9 @@
 part of 'board_bloc.dart';
 
+/// This class describes an abstract event of the board screen.
 abstract class BoardEvent extends Equatable {}
 
+/// Load articles from the server
 class InitArticlesEvent extends BoardEvent {
   InitArticlesEvent();
 
@@ -9,6 +11,7 @@ class InitArticlesEvent extends BoardEvent {
   List<Object> get props => [];
 }
 
+/// Load articles from the server is completed
 class InitArticlesCompletedEvent extends BoardEvent {
   InitArticlesCompletedEvent();
 
@@ -16,6 +19,7 @@ class InitArticlesCompletedEvent extends BoardEvent {
   List<Object> get props => [];
 }
 
+/// Open article
 class OpenArticleEvent extends BoardEvent {
   OpenArticleEvent(this.articleId);
 
