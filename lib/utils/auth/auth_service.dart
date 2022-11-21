@@ -3,31 +3,42 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../configuration/configuration.dart';
 import '../key_storage.dart';
+import 'auth_service_contract.dart';
 
-class AuthService {
-
+class AuthService extends AuthServiceContract {
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
 
+  @override
+  Future<String?> getAccessToken() async {
+    return await keyStorage.read(settings.secureStorageKeyAccessToken);
+  }
+
+  @override
   Future<bool> authenticate() async {
+
     String? accessToken = await keyStorage.read(settings.secureStorageKeyAccessToken);
     String? refreshToken = await keyStorage.read(settings.secureStorageKeyRefreshToken);
     String? expiresAt = await keyStorage.read(settings.secureStorageKeyExpiresAt);
 
     // Check if token is saved in secure storage. If not, authenticate with
     // browser. Otherwise update the token
-    if (accessToken == null || refreshToken == null || expiresAt == null) {
+    if (accessToken == null ||
+        refreshToken == null ||
+        expiresAt == null ||
+        DateTime.parse(expiresAt).isBefore(DateTime.now())) {
       try {
-        await _authenticateWithBrowser();
+        await authenticateWithBrowser();
       } catch (e) {
         return false;
       }
     } else {
       try {
         await _updateToken(accessToken, refreshToken, expiresAt);
-      } catch (error) { // If token update fails, authenticate with browser
+      } catch (error) {
+        // If token update fails, authenticate with browser
         try {
-          await _authenticateWithBrowser();
+          await authenticateWithBrowser();
         } catch (e) {
           return false;
         }
@@ -38,9 +49,13 @@ class AuthService {
   }
 
   Future<Client> _getClient() async {
-    Issuer issuer = await Issuer.discover(Uri.parse(
-        '${settings.oauth2ServerUrl}/realms/${settings.oauth2Realm}'));
-    return Client(issuer, settings.oauth2ClientName, clientSecret: settings.oauth2ClientSecret);
+    Issuer issuer = await Issuer.discover(Uri.parse('${settings.oauth2ServerUrl}/realms/${settings.oauth2Realm}'));
+
+    return Client(
+      issuer,
+      settings.oauth2ClientName,
+      clientSecret: settings.oauth2ClientSecret,
+    );
   }
 
   Future<void> _writeTokens(TokenResponse tokenResponse) async {
@@ -60,10 +75,9 @@ class AuthService {
 
     TokenResponse tokenResponse = await credential.getTokenResponse(true);
     await _writeTokens(tokenResponse);
-
   }
 
-  Future<void> _authenticateWithBrowser() async {
+  Future<void> authenticateWithBrowser() async {
     final client = await _getClient();
 
     // open the authentication endpoint in web browser
@@ -76,8 +90,11 @@ class AuthService {
     }
 
     // create an authenticator
-    var authenticator = Authenticator(client,
-        scopes: settings.oauth2ClientScopes, urlLancher: urlLauncher);
+    var authenticator = Authenticator(
+      client,
+      scopes: settings.oauth2ClientScopes,
+      urlLancher: urlLauncher,
+    );
 
     // starts the authentication
     var credential = await authenticator.authorize();

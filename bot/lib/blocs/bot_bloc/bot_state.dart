@@ -9,29 +9,46 @@ abstract class BotState extends Equatable {
   List<Object?> get props => [];
 }
 
-class BotStateInit extends BotState {}
+class BotStateInit extends BotState {
+  const BotStateInit();
+}
 
 class BotStateInitResponseReceived extends BotState {
   final Bot bot;
   const BotStateInitResponseReceived(this.bot);
+
+  @override
+  List<Object?> get props => [bot];
 }
 
 class BotStateInitError extends BotState {
   final String? error;
   const BotStateInitError(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }
 
 class BotStateInputOpened extends BotState {
   final Bot bot;
   const BotStateInputOpened(this.bot);
+
+  @override
+  List<Object?> get props => [bot];
 }
 
 class BotStateMessageSent extends BotState {
   final Bot bot;
   const BotStateMessageSent(this.bot);
+
+  @override
+  List<Object?> get props => [bot];
 }
 
 class BotStateMessageResponseReceived extends BotState {
   final Bot bot;
   const BotStateMessageResponseReceived(this.bot);
+
+  @override
+  List<Object?> get props => [bot];
 }
