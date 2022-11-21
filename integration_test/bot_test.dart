@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguality_mobile/liguality_app.dart';
 
+import 'test_article_paragraph_to_speech_provider.dart';
 import 'test_bot_provider.dart';
 import 'test_text_to_speech_provider.dart';
 
@@ -15,11 +16,13 @@ void main() {
 
       final testBotProvider = TestBotProvider();
       final testTextToSpeechProvider = TestTextToSpeechProvider();
+      final testArticleParagraphToSpeechProvider = TestArticleParagraphToSpeechProvider();
 
       await tester.pumpWidget(LingualityApp(
         isAuthDisabled: true,
         botProvider: testBotProvider,
         textToSpeechProvider: testTextToSpeechProvider,
+        articleParagraphToSpeechProvider: testArticleParagraphToSpeechProvider,
       ));
 
       await tester.pumpAndSettle();
