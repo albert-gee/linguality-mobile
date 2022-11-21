@@ -24,7 +24,7 @@ class ArticleWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               _buildArticleTitle(),
-              _buildButtonsContainerBloc(),
+              _buildButtonsContainerBloc(context),
               _buildArticleImage(),
               _buildArticleParagraphs(),
             ],
@@ -50,25 +50,25 @@ class ArticleWidget extends StatelessWidget {
   }
 
   /// Buttons container is shown below the article title, it has several states.
-  _buildButtonsContainerBloc() {
+  _buildButtonsContainerBloc(BuildContext context) {
     return BlocProvider(
       create: (_) => articleListenBloc,
       child: BlocBuilder<ArticleListenBloc, ArticleListenState>(
         builder: (context, state) {
           if (state is ArticleListenInitialState) {
             // Article is opened for the first time
-            return _buildListenButtonContainer(article);
+            return _buildListenButtonContainer(context, article);
           } else if (state is ArticleListenPlayingState) {
             // Article is playing
-            return _buildPauseButtonContainer(article);
+            return _buildPauseButtonContainer(context, article);
           } else if (state is ArticleListenPausedState) {
             // Article is paused
-            return _buildResumeButtonContainer(article);
+            return _buildResumeButtonContainer(context, article);
           } else if (state is ArticleListenCompletedState) {
             // Article listening is completed
-            return _buildListenButtonContainer(article);
+            return _buildListenButtonContainer(context, article);
           } else {
-            return _buildListenButtonContainer(article);
+            return _buildListenButtonContainer(context, article);
           }
         },
       ),
@@ -78,7 +78,8 @@ class ArticleWidget extends StatelessWidget {
   /// This method builds the container for the Listen button.
   /// The button may have different states - Listen, Pause, and Resume.
   Widget _buildButtonsContainer(
-      {required String buttonTitle,
+      {required BuildContext context,
+      required String buttonTitle,
       required Color buttonColor,
       required IconData iconData,
       required ArticleListenEvent onTapEvent}) {
@@ -92,6 +93,7 @@ class ArticleWidget extends StatelessWidget {
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildListenButton(
+            context: context,
               buttonTitle: buttonTitle, iconData: iconData, buttonColor: buttonColor, onTapEvent: onTapEvent),
           const Text('7 min read',
               style: TextStyle(
@@ -106,8 +108,9 @@ class ArticleWidget extends StatelessWidget {
   }
 
   /// This method builds the Listen button - Listen state
-  Widget _buildListenButtonContainer(Article article) {
+  Widget _buildListenButtonContainer(BuildContext context, Article article) {
     return _buildButtonsContainer(
+        context: context,
         buttonTitle: 'Listen',
         buttonColor: Colors.green,
         iconData: Icons.play_circle,
@@ -115,8 +118,9 @@ class ArticleWidget extends StatelessWidget {
   }
 
   /// This method builds the Listen button - Pause state
-  Widget _buildPauseButtonContainer(Article article) {
+  Widget _buildPauseButtonContainer(BuildContext context, Article article) {
     return _buildButtonsContainer(
+        context: context,
         buttonTitle: 'Pause',
         buttonColor: Colors.orange,
         iconData: Icons.pause_circle,
@@ -124,8 +128,9 @@ class ArticleWidget extends StatelessWidget {
   }
 
   /// This method builds the Listen button - Resume state
-  Widget _buildResumeButtonContainer(Article article) {
+  Widget _buildResumeButtonContainer(BuildContext context, Article article) {
     return _buildButtonsContainer(
+        context: context,
         buttonTitle: 'Resume',
         buttonColor: Colors.green,
         iconData: Icons.play_circle,
@@ -133,13 +138,15 @@ class ArticleWidget extends StatelessWidget {
   }
 
   Widget _buildListenButton(
-      {required String buttonTitle,
+      {required BuildContext context,
+      required String buttonTitle,
       required IconData iconData,
       required Color buttonColor,
       required ArticleListenEvent onTapEvent}) {
     return GestureDetector(
       onTap: () async {
-        articleListenBloc.add(onTapEvent);
+        BlocProvider.of<ArticleListenBloc>(context).add(onTapEvent);
+        // articleListenBloc.add(onTapEvent);
       },
       child: Row(
         children: <Widget>[

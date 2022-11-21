@@ -10,12 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../providers/article_paragraph_to_speech_provider_contract.dart';
 
 /// This class describes the board screen UI.
-class Board extends StatelessWidget {
+class BoardWidget extends StatelessWidget {
   final ArticleProviderContract articleProvider;
   final ArticleParagraphToSpeechProviderContract articleParagraphToSpeechProvider;
   final BoardBloc boardBloc;
 
-  Board({Key? key, required this.articleProvider, required this.articleParagraphToSpeechProvider})
+  BoardWidget({Key? key, required this.articleProvider, required this.articleParagraphToSpeechProvider})
       : boardBloc = BoardBloc(
             articleProvider: articleProvider,
             articleParagraphToSpeechService: ArticleParagraphToSpeechService(articleParagraphToSpeechProvider),
@@ -31,6 +31,7 @@ class Board extends StatelessWidget {
       create: (_) => boardBloc,
       child: BlocBuilder<BoardBloc, BoardState>(
           builder: (context, state) {
+
             if (state is BoardInitialState) {
               /// BoardInitialState
               return Column(
