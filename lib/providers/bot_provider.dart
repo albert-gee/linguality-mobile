@@ -10,7 +10,9 @@ import '../utils/api/api_response.dart';
 
 class BotProvider extends BotProviderContract {
   final Configuration settings = Configuration();
-  final Api api = Api();
+  final Api api;
+
+  BotProvider({required this.api});
 
   /// Initiate a conversation with the bot
   @override

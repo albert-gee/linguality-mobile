@@ -10,7 +10,9 @@ class ArticleProvider extends ArticleProviderContract {
 
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
-  final Api api = Api();
+  final Api api;
+
+  ArticleProvider({required this.api});
 
   @override
   Future<List<Article>> fetchArticles() async {

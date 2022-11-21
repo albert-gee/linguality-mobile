@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bot/providers/text_to_speech_provider_contract.dart';
-import 'package:linguality_mobile/utils/auth/auth_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../configuration/configuration.dart';
@@ -12,7 +11,9 @@ import '../utils/key_storage.dart';
 class TextToSpeechProvider extends TextToSpeechProviderContract {
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
-  final Api api = Api();
+  final Api api;
+
+  TextToSpeechProvider({required this.api});
 
   @override
   Future<String> convert(String inputText) async {
