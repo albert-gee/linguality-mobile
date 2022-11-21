@@ -10,11 +10,11 @@ class BotBloc extends Bloc<BotEvent, BotState> {
 
   final BotServiceContract _botService;
 
-  BotBloc(this._botService): super(BotStateInit()) {
+  BotBloc(this._botService): super(const BotStateInit()) {
 
     on<InitBotEvent>((event, emit) async {
       try {
-        emit(BotStateInit());
+        emit(const BotStateInit());
 
         final bot = await _botService.init();
         emit(BotStateInitResponseReceived(bot));
