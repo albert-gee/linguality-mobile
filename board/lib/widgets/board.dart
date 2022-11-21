@@ -1,36 +1,36 @@
-import 'package:board/bloc/board_bloc.dart';
+import 'package:board/bloc/board_bloc/board_bloc.dart';
 import 'package:board/providers/article_provider_contract.dart';
+import 'package:board/services/article_paragraph_to_speech/article_paragraph_to_speech_service.dart';
 import 'package:board/widgets/article_widget.dart';
 import 'package:board/widgets/latest_articles_widget.dart';
 import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../providers/article_paragraph_to_speech_provider_contract.dart';
 
+/// This class describes the board screen UI.
 class Board extends StatelessWidget {
-  Board({super.key, required this.articleProvider})
-      : boardBloc = BoardBloc(articleProvider: articleProvider);
-
   final ArticleProviderContract articleProvider;
+  final ArticleParagraphToSpeechProviderContract articleParagraphToSpeechProvider;
   final BoardBloc boardBloc;
+
+  Board({Key? key, required this.articleProvider, required this.articleParagraphToSpeechProvider})
+      : boardBloc = BoardBloc(
+            articleProvider: articleProvider,
+            articleParagraphToSpeechService: ArticleParagraphToSpeechService(articleParagraphToSpeechProvider),
+      ),
+            super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Send InitArticlesEvent to load articles from the server
     boardBloc.add(InitArticlesEvent());
 
     return BlocProvider(
       create: (_) => boardBloc,
-      child: BlocListener<BoardBloc, BoardState>(
-        listener: (context, state) {
-          if (state is BoardInitialState) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              /// ToDo
-            });
-          }
-        },
-        child: BlocBuilder<BoardBloc, BoardState>(
+      child: BlocBuilder<BoardBloc, BoardState>(
           builder: (context, state) {
-
             if (state is BoardInitialState) {
               /// BoardInitialState
               return Column(
@@ -44,10 +44,7 @@ class Board extends StatelessWidget {
               return Column(
                 children: <Widget>[
                   const SectionTitleWidget(title: 'Latest Articles'),
-                  LatestArticlesWidget(
-                    boardBloc: boardBloc,
-                    articles: state.articles
-                  ),
+                  LatestArticlesWidget(boardBloc: boardBloc, articles: state.articles),
                 ],
               );
             } else if (state is OpenArticleInitState) {
@@ -60,12 +57,13 @@ class Board extends StatelessWidget {
               );
             } else if (state is OpenArticleCompletedState) {
               /// OpenArticleCompletedState
-              return ArticleWidget(article: state.article);
+              return ArticleWidget(
+                  article: state.article,
+                  articleParagraphToSpeechService: ArticleParagraphToSpeechService(articleParagraphToSpeechProvider));
             } else {
               return Container();
             }
           },
-        ),
       ),
     );
 
@@ -79,37 +77,37 @@ class Board extends StatelessWidget {
     );
   }
 
-  // Widget _buildPanorama() {
-  //   return Container(
-  //     constraints: const BoxConstraints.expand(),
-  //     // decoration: const BoxDecoration(
-  //     //   image: DecorationImage(
-  //     //       image: AssetImage("assets/images/neurons.jpg"),
-  //     //       fit: BoxFit.cover),
-  //     // ),
-  //     child: Panorama(
-  //       animSpeed: 0,
-  //       // sensorControl: SensorControl.Orientation,
-  //       child: Image.asset('assets/images/panorama.jpg', package: 'board'),
-  //     ),
-  //     // Column(
-  //     //   mainAxisAlignment: MainAxisAlignment.start,
-  //     //   children: <Widget>[
-  //     //     Text(
-  //     //       'Hello, ${user.name}',
-  //     //       style: Theme.of(context).textTheme.headline4,
-  //     //     ),
-  //     //     SizedBox(
-  //     //       height: 300,
-  //     //       width: 300,
-  //     //       child: Panorama(
-  //     //         animSpeed: 1.0,
-  //     //         // sensorControl: SensorControl.Orientation,
-  //     //         child: Image.asset('assets/images/panorama.jpg'),
-  //     //       ),
-  //     //     ),
-  //     //   ],
-  //     // ),
-  //   );
-  // }
+// Widget _buildPanorama() {
+//   return Container(
+//     constraints: const BoxConstraints.expand(),
+//     // decoration: const BoxDecoration(
+//     //   image: DecorationImage(
+//     //       image: AssetImage("assets/images/neurons.jpg"),
+//     //       fit: BoxFit.cover),
+//     // ),
+//     child: Panorama(
+//       animSpeed: 0,
+//       // sensorControl: SensorControl.Orientation,
+//       child: Image.asset('assets/images/panorama.jpg', package: 'board'),
+//     ),
+//     // Column(
+//     //   mainAxisAlignment: MainAxisAlignment.start,
+//     //   children: <Widget>[
+//     //     Text(
+//     //       'Hello, ${user.name}',
+//     //       style: Theme.of(context).textTheme.headline4,
+//     //     ),
+//     //     SizedBox(
+//     //       height: 300,
+//     //       width: 300,
+//     //       child: Panorama(
+//     //         animSpeed: 1.0,
+//     //         // sensorControl: SensorControl.Orientation,
+//     //         child: Image.asset('assets/images/panorama.jpg'),
+//     //       ),
+//     //     ),
+//     //   ],
+//     // ),
+//   );
+// }
 }
