@@ -36,6 +36,8 @@ dependencies:
 
   bot:
     path: ./bot
+  board:
+    path: ./board
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,8 +45,6 @@ dependencies:
   openid_client: ^0.4.6
   url_launcher: ^6.1.6
   flutter_secure_storage: ^6.0.0
-  panorama: ^0.4.1
-  mocktail: ^0.3.0
   flutter_staggered_animations: ^1.1.1
   path_provider: ^2.0.11
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bot/providers/text_to_speech_provider_contract.dart';
+import 'package:linguality_mobile/utils/auth/auth_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../configuration/configuration.dart';
@@ -15,31 +16,25 @@ class TextToSpeechProvider extends TextToSpeechProviderContract {
 
   @override
   Future<String> convert(String inputText) async {
-    var token = await keyStorage.read(settings.secureStorageKeyAccessToken);
-    if (token != null) {
+    String audioFileName = "${inputText.hashCode}.mp3";
 
-      String audioFileName = "${inputText.hashCode}.mp3";
+    Directory tempDir = await getTemporaryDirectory();
+    String tempFilePath = "${tempDir.path}/$audioFileName";
 
-      Directory tempDir = await getTemporaryDirectory();
-      String tempFilePath = "${tempDir.path}/$audioFileName";
-
-      if (File(tempFilePath).existsSync()) {
-        return tempFilePath;
-      } else {
-        ApiResponse apiResponse = await api.postDownload(
-            url: '${settings.apiServerUrl}/tts',
-            tempFilePath: tempFilePath,
-            data: {'inputText': inputText},
-            jwt: token);
-
-        if (apiResponse.statusCode == 200 && apiResponse.data == tempFilePath) {
-          return apiResponse.data;
-        } else {
-          throw Exception('Unsuccessful text to speech conversion');
-        }
-      }
+    if (File(tempFilePath).existsSync()) {
+      return tempFilePath;
     } else {
-      throw Exception("Unauthenticated");
+      ApiResponse apiResponse = await api.postDownload(
+          url: '${settings.apiServerUrl}/tts',
+          tempFilePath: tempFilePath,
+          data: {'inputText': inputText});
+
+      if (apiResponse.statusCode == 200 && apiResponse.data == tempFilePath) {
+        return apiResponse.data;
+      } else {
+        throw Exception('Unsuccessful text to speech conversion');
+      }
     }
+
   }
 }

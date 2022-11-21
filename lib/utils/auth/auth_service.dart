@@ -9,6 +9,10 @@ class AuthService {
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
 
+  Future<String?> getAccessToken() async {
+    return await keyStorage.read(settings.secureStorageKeyAccessToken);
+  }
+
   Future<bool> authenticate() async {
     String? accessToken = await keyStorage.read(settings.secureStorageKeyAccessToken);
     String? refreshToken = await keyStorage.read(settings.secureStorageKeyRefreshToken);
@@ -16,9 +20,9 @@ class AuthService {
 
     // Check if token is saved in secure storage. If not, authenticate with
     // browser. Otherwise update the token
-    if (accessToken == null || refreshToken == null || expiresAt == null) {
+    if (accessToken == null || refreshToken == null || expiresAt == null || DateTime.parse(expiresAt).isBefore(DateTime.now())) {
       try {
-        await _authenticateWithBrowser();
+        await authenticateWithBrowser();
       } catch (e) {
         return false;
       }
@@ -27,7 +31,7 @@ class AuthService {
         await _updateToken(accessToken, refreshToken, expiresAt);
       } catch (error) { // If token update fails, authenticate with browser
         try {
-          await _authenticateWithBrowser();
+          await authenticateWithBrowser();
         } catch (e) {
           return false;
         }
@@ -60,10 +64,9 @@ class AuthService {
 
     TokenResponse tokenResponse = await credential.getTokenResponse(true);
     await _writeTokens(tokenResponse);
-
   }
 
-  Future<void> _authenticateWithBrowser() async {
+  Future<void> authenticateWithBrowser() async {
     final client = await _getClient();
 
     // open the authentication endpoint in web browser

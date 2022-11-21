@@ -1,6 +1,6 @@
 import 'package:bot/widgets/bot_input_widget.dart';
 import 'package:bot/widgets/bot_widget.dart';
-import 'package:bot/widgets/messages_widget.dart';
+import 'package:bot/widgets/bot_messages_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linguality_mobile/liguality_app.dart';
@@ -29,7 +29,7 @@ void main() {
       await Future.delayed(const Duration(seconds: 1), (){});
 
       await tester.pumpAndSettle();
-      expect(find.byType(MessagesWidget), findsOneWidget);
+      expect(find.byType(BotMessagesWidget), findsOneWidget);
       expect(find.text('Hello! How can I help you?'), findsOneWidget);
       expect(find.byType(FloatingActionButton), findsOneWidget);
 
