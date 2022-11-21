@@ -9,7 +9,7 @@ https://www.geeksforgeeks.org/flutter-building-and-releasing-apk-using-github-ac
 
 
 ## Testing
-flutter test integration_test/bot_test.dart
+flutter test integration_test/linguality_test.dart
 
 ### Code Metrics
 https://pub.dev/packages/dart_code_metrics
