@@ -3,16 +3,20 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../configuration/configuration.dart';
 import '../key_storage.dart';
+import 'auth_service_contract.dart';
 
-class AuthService {
+class AuthService extends AuthServiceContract {
   final Configuration settings = Configuration();
   final KeyStorage keyStorage = KeyStorage();
 
+  @override
   Future<String?> getAccessToken() async {
     return await keyStorage.read(settings.secureStorageKeyAccessToken);
   }
 
+  @override
   Future<bool> authenticate() async {
+
     String? accessToken = await keyStorage.read(settings.secureStorageKeyAccessToken);
     String? refreshToken = await keyStorage.read(settings.secureStorageKeyRefreshToken);
     String? expiresAt = await keyStorage.read(settings.secureStorageKeyExpiresAt);
