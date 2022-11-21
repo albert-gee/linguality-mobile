@@ -3,20 +3,22 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:board/models/article.dart';
-import 'package:board/providers/article_paragraph_to_speech_provider_contract.dart';
 import 'package:equatable/equatable.dart';
+
+import '../../services/article_paragraph_to_speech/article_paragraph_to_speech_service_contract.dart';
 
 part 'article_listen_event.dart';
 
 part 'article_listen_state.dart';
 
+/// This class describes the business logic of the article listen button.
 class ArticleListenBloc extends Bloc<ArticleListenEvent, ArticleListenState> {
-  final ArticleParagraphToSpeechProviderContract articleParagraphToSpeechProvider;
+  final ArticleParagraphToSpeechServiceContract articleParagraphToSpeechService;
   final AudioPlayer audioPlayer = AudioPlayer();
   final Article article;
 
-  ArticleListenBloc({required this.articleParagraphToSpeechProvider, required this.article})
-      : super(ArticleListenInitialState(article: article)) {
+  ArticleListenBloc({required this.articleParagraphToSpeechService, required this.article})
+      : super(const ArticleListenInitialState()) {
 
     on<ArticleListenEvent>((event, emit) async {
       // audioPlayer.onPositionChanged.listen((event) {
@@ -49,19 +51,20 @@ class ArticleListenBloc extends Bloc<ArticleListenEvent, ArticleListenState> {
 
       /// ArticleListenCompletedEvent
       if (event is ArticleListenCompletedEvent) {
-        emit(ArticleListenInitialState(article: article));
+        emit(const ArticleListenInitialState());
       }
 
+      /// ArticleListenPauseEvent
       if (event is ArticleListenPauseEvent) {
         await audioPlayer.pause();
-        emit(ArticleListenPausedState(article.id.toString()));
+        emit(const ArticleListenPausedState());
       }
     });
   }
 
   Future<void> _playParagraph(String articleId, String paragraphId) async {
     add(const ArticleListenPlayEvent());
-    final String url = await articleParagraphToSpeechProvider.convert(articleId, paragraphId);
+    final String url = await articleParagraphToSpeechService.convert(articleId, paragraphId);
     await audioPlayer.play(DeviceFileSource(url));
   }
 }

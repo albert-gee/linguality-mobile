@@ -5,9 +5,7 @@ abstract class ArticleListenState extends Equatable {
 }
 
 class ArticleListenInitialState extends ArticleListenState {
-  final Article article;
-
-  const ArticleListenInitialState({required this.article});
+  const ArticleListenInitialState();
 
   @override
   List<Object> get props => [];
@@ -28,19 +26,16 @@ class ArticleListenCompletedState extends ArticleListenState {
 }
 
 class ArticleListenPausedState extends ArticleListenState {
-  final String articleId;
-
-  const ArticleListenPausedState(this.articleId);
+  const ArticleListenPausedState();
 
   @override
-  List<Object> get props => [articleId];
+  List<Object> get props => [];
 }
 
 class ArticleListenStoppedState extends ArticleListenState {
-  final String articleId;
 
-  const ArticleListenStoppedState(this.articleId);
+  const ArticleListenStoppedState();
 
   @override
-  List<Object> get props => [articleId];
+  List<Object> get props => [];
 }
