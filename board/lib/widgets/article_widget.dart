@@ -1,11 +1,19 @@
+import 'package:board/bloc/article_listen_bloc/article_listen_bloc.dart';
+import 'package:board/services/article_paragraph_to_speech/article_paragraph_to_speech_service_contract.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/article.dart';
 
+/// This class describes the UI of the article screen.
 class ArticleWidget extends StatelessWidget {
-  const ArticleWidget({super.key, required this.article});
+  ArticleWidget({super.key, required this.article, required this.articleParagraphToSpeechService})
+      : articleListenBloc =
+            ArticleListenBloc(articleParagraphToSpeechService: articleParagraphToSpeechService, article: article);
 
   final Article article;
+  final ArticleParagraphToSpeechServiceContract articleParagraphToSpeechService;
+  final ArticleListenBloc articleListenBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +24,15 @@ class ArticleWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               _buildArticleTitle(),
-              _buildButtonsContainer(),
+              _buildButtonsContainerBloc(),
               _buildArticleImage(),
               _buildArticleParagraphs(),
             ],
           ),
-        )
-    );
+        ));
   }
 
+  /// Title of the article is shown at the top of the screen.
   _buildArticleTitle() {
     return Container(
       width: double.infinity,
@@ -41,46 +49,125 @@ class ArticleWidget extends StatelessWidget {
     );
   }
 
-  _buildButtonsContainer() {
+  /// Buttons container is shown below the article title, it has several states.
+  _buildButtonsContainerBloc() {
+    return BlocProvider(
+      create: (_) => articleListenBloc,
+      child: BlocBuilder<ArticleListenBloc, ArticleListenState>(
+        builder: (context, state) {
+          if (state is ArticleListenInitialState) {
+            // Article is opened for the first time
+            return _buildListenButtonContainer(article);
+          } else if (state is ArticleListenPlayingState) {
+            // Article is playing
+            return _buildPauseButtonContainer(article);
+          } else if (state is ArticleListenPausedState) {
+            // Article is paused
+            return _buildResumeButtonContainer(article);
+          } else if (state is ArticleListenCompletedState) {
+            // Article listening is completed
+            return _buildListenButtonContainer(article);
+          } else {
+            return _buildListenButtonContainer(article);
+          }
+        },
+      ),
+    );
+  }
+
+  /// This method builds the container for the Listen button.
+  /// The button may have different states - Listen, Pause, and Resume.
+  Widget _buildButtonsContainer(
+      {required String buttonTitle,
+      required Color buttonColor,
+      required IconData iconData,
+      required ArticleListenEvent onTapEvent}) {
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          const Text(
-              '7 min read',
+          _buildListenButton(
+              buttonTitle: buttonTitle, iconData: iconData, buttonColor: buttonColor, onTapEvent: onTapEvent),
+          const Text('7 min read',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 fontStyle: FontStyle.italic,
                 color: Colors.orange,
-              )
+              )),
+        ],
+      ),
+    );
+  }
+
+  /// This method builds the Listen button - Listen state
+  Widget _buildListenButtonContainer(Article article) {
+    return _buildButtonsContainer(
+        buttonTitle: 'Listen',
+        buttonColor: Colors.green,
+        iconData: Icons.play_circle,
+        onTapEvent: ArticleListenPlayPressedEvent(article));
+  }
+
+  /// This method builds the Listen button - Pause state
+  Widget _buildPauseButtonContainer(Article article) {
+    return _buildButtonsContainer(
+        buttonTitle: 'Pause',
+        buttonColor: Colors.orange,
+        iconData: Icons.pause_circle,
+        onTapEvent: const ArticleListenPauseEvent());
+  }
+
+  /// This method builds the Listen button - Resume state
+  Widget _buildResumeButtonContainer(Article article) {
+    return _buildButtonsContainer(
+        buttonTitle: 'Resume',
+        buttonColor: Colors.green,
+        iconData: Icons.play_circle,
+        onTapEvent: const ArticleListenPlayEvent());
+  }
+
+  Widget _buildListenButton(
+      {required String buttonTitle,
+      required IconData iconData,
+      required Color buttonColor,
+      required ArticleListenEvent onTapEvent}) {
+    return GestureDetector(
+      onTap: () async {
+        articleListenBloc.add(onTapEvent);
+      },
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 5),
+            child: Icon(
+              iconData,
+              color: buttonColor,
+              size: 30,
+            ),
           ),
-          Row(
-            children: const <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(right: 5),
-                  child: Icon(
-                      Icons.play_circle,
-                      color: Colors.orange)
+          SizedBox(
+            width: 70,
+            child: Text(
+              buttonTitle,
+              style: TextStyle(
+                color: buttonColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                  'Listen',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange,
-                  )
-              ),
-            ],
+            ),
           ),
         ],
       ),
     );
   }
 
+  /// Article image is shown below the buttons container.
   _buildArticleImage() {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -88,6 +175,7 @@ class ArticleWidget extends StatelessWidget {
     );
   }
 
+  /// Article paragraphs are shown below the article image.
   Widget _buildArticleParagraphs() {
     return Container(
         width: double.infinity,
@@ -107,7 +195,6 @@ class ArticleWidget extends StatelessWidget {
               ),
             );
           }).toList(),
-        )
-    );
+        ));
   }
 }
