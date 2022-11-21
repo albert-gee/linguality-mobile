@@ -19,7 +19,6 @@ class OpenArticleInitState extends BoardState {}
 /// Open article is completed, display it on the board screen
 class OpenArticleCompletedState extends BoardState {
   final Article article;
-  final ArticleParagraphToSpeechServiceContract articleParagraphToSpeechService;
 
-  OpenArticleCompletedState(this.article, this.articleParagraphToSpeechService);
+  OpenArticleCompletedState(this.article);
 }

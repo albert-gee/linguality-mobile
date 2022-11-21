@@ -36,7 +36,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     on<OpenArticleEvent>((event, emit) async {
       emit(OpenArticleInitState());
       final Article article = await articleService.fetchArticle(event.articleId);
-      emit(OpenArticleCompletedState(article, articleParagraphToSpeechService));
+      emit(OpenArticleCompletedState(article));
     });
   }
 }
