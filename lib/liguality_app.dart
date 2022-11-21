@@ -97,7 +97,7 @@ class LingualityApp extends StatelessWidget {
                 isRepeatingAnimation: true,
               ),
             ),
-          )
+          ),
         ),
       ),
     );
