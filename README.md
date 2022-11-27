@@ -29,3 +29,4 @@ Reports code metrics, rules and anti-patterns violations. To execute the command
 
 #### Check unused code
 `flutter pub run dart_code_metrics:metrics check-unused-code lib`
+
