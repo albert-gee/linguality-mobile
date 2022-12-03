@@ -72,6 +72,8 @@ class BotMessageBubbleWidget extends StatelessWidget {
   }
 
   Widget _buildMessageContainer() {
+    var timestamp = message.timestamp.toLocal();
+    String time = '${timestamp.hour}:${timestamp.minute}:${timestamp.second}';
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -91,7 +93,7 @@ class BotMessageBubbleWidget extends StatelessWidget {
         children: [
           _buildTextMessage(),
           const SizedBox(height: 15),
-          _buildMessageContainerBottomRow(),
+          _buildMessageContainerBottomRow(time),
         ],
       ),
     );
@@ -109,19 +111,23 @@ class BotMessageBubbleWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageContainerBottomRow() {
+  Widget _buildMessageContainerBottomRow(String time) {
+    // if (time == null) {
+    //   var now = DateTime.now();
+    //   time = '${now.hour}:${now.minute}:${now.second}';
+    // }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
+      children: [
         Text(
-          '12:00',
-          style: TextStyle(
+          time,
+          style: const TextStyle(
             color: Color(0xFF97AD8E),
             fontSize: 12,
           ),
         ),
-        SizedBox(width: 5),
-        Icon(
+        const SizedBox(width: 5),
+        const Icon(
           Icons.done_all,
           size: 18,
           color: Color(0xFF97AD8E),
