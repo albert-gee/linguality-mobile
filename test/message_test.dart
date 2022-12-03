@@ -13,11 +13,5 @@ void main() {
 
 
   test('Messages list size should increment after adding a new message', () {
-    // final messageService = MessageService();
-    // int initialSize = messageService.messages.length;
-    // final message = Message(id: '0', text: "Test", messageType: MessageType.bot, timestamp: DateTime.now());
-    // messageService.addMessage(message);
-    //
-    // expect(initialSize, equals(messageService.messages.length - 1));
   });
 }
