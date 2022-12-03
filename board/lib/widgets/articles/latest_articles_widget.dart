@@ -2,7 +2,7 @@ import 'package:board/bloc/board_bloc/board_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-import '../models/article.dart';
+import '../../models/article.dart';
 import 'latest_articles_card_widget.dart';
 
 /// This class describes the latest articles widget UI.

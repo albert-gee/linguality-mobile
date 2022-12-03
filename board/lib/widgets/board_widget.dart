@@ -1,7 +1,7 @@
 import 'package:board/bloc/board_bloc/board_bloc.dart';
 import 'package:board/providers/article_provider_contract.dart';
 import 'package:board/services/article_paragraph_to_speech/article_paragraph_to_speech_service.dart';
-import 'package:board/widgets/article_widget.dart';
+import 'package:board/widgets/articles/article_widget.dart';
 import 'package:board/widgets/latest_articles_widget.dart';
 import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';

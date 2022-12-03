@@ -3,7 +3,7 @@ import 'package:board/services/article_paragraph_to_speech/article_paragraph_to_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/article.dart';
+import '../../models/article.dart';
 
 /// This class describes the UI of the article screen.
 class ArticleWidget extends StatelessWidget {

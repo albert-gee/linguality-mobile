@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/board_bloc/board_bloc.dart';
+import '../../bloc/board_bloc/board_bloc.dart';
 
 /// This describes an individual article card in Latest Articles widget.
 class LatestArticlesCardWidget extends StatelessWidget {
