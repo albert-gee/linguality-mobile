@@ -2,12 +2,12 @@ import 'package:board/bloc/board_bloc/board_bloc.dart';
 import 'package:board/providers/article_provider_contract.dart';
 import 'package:board/services/article_paragraph_to_speech/article_paragraph_to_speech_service.dart';
 import 'package:board/widgets/articles/article_widget.dart';
-import 'package:board/widgets/latest_articles_widget.dart';
 import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../providers/article_paragraph_to_speech_provider_contract.dart';
+import 'articles/latest_articles_widget.dart';
 
 /// This class describes the board screen UI.
 class BoardWidget extends StatelessWidget {
@@ -25,7 +25,7 @@ class BoardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Send InitArticlesEvent to load articles from the server
-    boardBloc.add(InitArticlesEvent());
+    boardBloc.add(const InitArticlesEvent());
 
     return BlocProvider(
       create: (_) => boardBloc,
