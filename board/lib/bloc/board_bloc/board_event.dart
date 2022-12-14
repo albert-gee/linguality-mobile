@@ -33,3 +33,11 @@ class OpenArticleEvent extends BoardEvent {
   @override
   List<Object> get props => [articleId];
 }
+
+/// Close article
+class CloseArticleEvent extends BoardEvent {
+  const CloseArticleEvent();
+
+  @override
+  List<Object> get props => [];
+}
