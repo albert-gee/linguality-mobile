@@ -3,6 +3,7 @@ import 'package:board/services/article_paragraph_to_speech/article_paragraph_to_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/board_bloc/board_bloc.dart';
 import '../../models/article.dart';
 
 /// This class describes the UI of the article screen.
@@ -23,8 +24,9 @@ class ArticleWidget extends StatelessWidget {
           color: Colors.blueGrey[50],
           child: Column(
             children: <Widget>[
-              _buildArticleTitle(),
               _buildButtonsContainerBloc(context),
+              _buildArticleTitle(),
+              // _buildButtonsContainerBloc(context),
               _buildArticleImage(),
               _buildArticleParagraphs(),
             ],
@@ -32,8 +34,19 @@ class ArticleWidget extends StatelessWidget {
         ));
   }
 
+  /// Back button
+  Widget _buildBackButton(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        BlocProvider.of<BoardBloc>(context)
+            .add(const CloseArticleEvent());
+      },
+    );
+  }
+
   /// Title of the article is shown at the top of the screen.
-  _buildArticleTitle() {
+  Widget _buildArticleTitle() {
     return Container(
       width: double.infinity,
       color: Colors.white,
@@ -92,16 +105,26 @@ class ArticleWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _buildListenButton(
-            context: context,
-              buttonTitle: buttonTitle, iconData: iconData, buttonColor: buttonColor, onTapEvent: onTapEvent),
-          const Text('7 min read',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
-                color: Colors.orange,
-              )),
+          _buildBackButton(context),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              _buildListenButton(
+                  context: context,
+                  buttonTitle: buttonTitle,
+                  iconData: iconData,
+                  buttonColor: buttonColor,
+                  onTapEvent: onTapEvent),
+              const Text('7 min',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.orange,
+                  )),
+            ],
+
+          )
         ],
       ),
     );
@@ -149,6 +172,7 @@ class ArticleWidget extends StatelessWidget {
         // articleListenBloc.add(onTapEvent);
       },
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 5),
@@ -158,15 +182,12 @@ class ArticleWidget extends StatelessWidget {
               size: 30,
             ),
           ),
-          SizedBox(
-            width: 70,
-            child: Text(
-              buttonTitle,
-              style: TextStyle(
-                color: buttonColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+          Text(
+            buttonTitle,
+            style: TextStyle(
+              color: buttonColor,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
