@@ -27,45 +27,58 @@ class BoardWidget extends StatelessWidget {
     // Send InitArticlesEvent to load articles from the server
     boardBloc.add(const InitArticlesEvent());
 
-    return BlocProvider(
-      create: (_) => boardBloc,
-      child: BlocBuilder<BoardBloc, BoardState>(
-          builder: (context, state) {
+    return  Column(
+      children: [
+        Row(
+          children: const [
+            Icon(
+              Icons.psychology,
+            ),
+            Text('Linguality'),
+            // Text(title),
+          ],
+        ),
+        BlocProvider(
+          create: (_) => boardBloc,
+          child: BlocBuilder<BoardBloc, BoardState>(
+              builder: (context, state) {
 
-            if (state is BoardInitialState) {
-              /// BoardInitialState
-              return Column(
-                children: <Widget>[
-                  const SectionTitleWidget(title: 'Latest Articles'),
-                  _addProgressBar(),
-                ],
-              );
-            } else if (state is ArticlesLoadedState) {
-              /// ArticlesLoadedState
-              return Column(
-                children: <Widget>[
-                  const SectionTitleWidget(title: 'Latest Articles'),
-                  LatestArticlesWidget(boardBloc: boardBloc, articles: state.articles),
-                ],
-              );
-            } else if (state is OpenArticleInitState) {
-              /// OpenArticleInitState
-              return Column(
-                children: <Widget>[
-                  const SectionTitleWidget(title: 'Latest Articles'),
-                  _addProgressBar(),
-                ],
-              );
-            } else if (state is OpenArticleCompletedState) {
-              /// OpenArticleCompletedState
-              return ArticleWidget(
-                  article: state.article,
-                  articleParagraphToSpeechService: ArticleParagraphToSpeechService(articleParagraphToSpeechProvider));
-            } else {
-              return Container();
-            }
-          },
-      ),
+                if (state is BoardInitialState) {
+                  /// BoardInitialState
+                  return Column(
+                    children: <Widget>[
+                      const SectionTitleWidget(title: 'Latest Articles'),
+                      _addProgressBar(),
+                    ],
+                  );
+                } else if (state is ArticlesLoadedState) {
+                  /// ArticlesLoadedState
+                  return Column(
+                    children: <Widget>[
+                      const SectionTitleWidget(title: 'Latest Articles'),
+                      LatestArticlesWidget(boardBloc: boardBloc, articles: state.articles),
+                    ],
+                  );
+                } else if (state is OpenArticleInitState) {
+                  /// OpenArticleInitState
+                  return Column(
+                    children: <Widget>[
+                      const SectionTitleWidget(title: 'Latest Articles'),
+                      _addProgressBar(),
+                    ],
+                  );
+                } else if (state is OpenArticleCompletedState) {
+                  /// OpenArticleCompletedState
+                  return ArticleWidget(
+                      article: state.article,
+                      articleParagraphToSpeechService: ArticleParagraphToSpeechService(articleParagraphToSpeechProvider));
+                } else {
+                  return Container();
+                }
+              },
+          ),
+        )
+      ],
     );
 
     // return _buildPanorama();
