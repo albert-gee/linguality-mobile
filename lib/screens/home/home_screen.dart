@@ -30,13 +30,6 @@ class HomeScreen extends StatelessWidget {
     double panelHeightClosed = MediaQuery.of(context).size.height - 400;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        titleSpacing: 0,
-        leading: const Icon(
-          Icons.psychology,
-        ),
-      ),
       body: SlidingUpPanel(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20.0),
