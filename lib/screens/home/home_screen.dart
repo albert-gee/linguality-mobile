@@ -30,23 +30,26 @@ class HomeScreen extends StatelessWidget {
     double panelHeightClosed = MediaQuery.of(context).size.height - 400;
 
     return Scaffold(
-      body: SlidingUpPanel(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20.0),
-          topRight: Radius.circular(20.0),
-        ),
-        minHeight: _panelHeightOpen,
-        maxHeight: panelHeightClosed,
-        defaultPanelState: PanelState.OPEN,
-        controller: PanelController(),
-        body: BoardWidget(
-          articleProvider: articleProvider,
-          articleParagraphToSpeechProvider: articleParagraphToSpeechProvider,
-        ),
-        panel: BotWidget(
-          botProvider: botProvider,
-          textToSpeechProvider: textToSpeechProvider,
-        ),
+      body: SafeArea(
+        child: SlidingUpPanel(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          minHeight: _panelHeightOpen,
+          maxHeight: panelHeightClosed,
+          defaultPanelState: PanelState.OPEN,
+          controller: PanelController(),
+          body: BoardWidget(
+            title: title,
+            articleProvider: articleProvider,
+            articleParagraphToSpeechProvider: articleParagraphToSpeechProvider,
+          ),
+          panel: BotWidget(
+            botProvider: botProvider,
+            textToSpeechProvider: textToSpeechProvider,
+          ),
+        )
       ),
       // floatingActionButton: const ReplyButtonWidget()
     );
