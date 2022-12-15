@@ -1,4 +1,4 @@
-import 'package:board/widgets/articles/article_widget.dart';
+import 'package:board/widgets/article/article_widget.dart';
 import 'package:board/widgets/articles/latest_articles_card_widget.dart';
 import 'package:board/widgets/articles/latest_articles_widget.dart';
 import 'package:board/widgets/board_widget.dart';
