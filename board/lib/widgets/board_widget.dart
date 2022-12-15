@@ -1,7 +1,7 @@
 import 'package:board/bloc/board_bloc/board_bloc.dart';
 import 'package:board/providers/article_provider_contract.dart';
 import 'package:board/services/article_paragraph_to_speech/article_paragraph_to_speech_service.dart';
-import 'package:board/widgets/articles/article_widget.dart';
+import 'package:board/widgets/article/article_widget.dart';
 import 'package:board/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +14,9 @@ class BoardWidget extends StatelessWidget {
   final ArticleProviderContract articleProvider;
   final ArticleParagraphToSpeechProviderContract articleParagraphToSpeechProvider;
   final BoardBloc boardBloc;
+  final String title;
 
-  BoardWidget({Key? key, required this.articleProvider, required this.articleParagraphToSpeechProvider})
+  BoardWidget({Key? key, required this.articleProvider, required this.articleParagraphToSpeechProvider, required this.title})
       : boardBloc = BoardBloc(
             articleProvider: articleProvider,
             articleParagraphToSpeechService: ArticleParagraphToSpeechService(articleParagraphToSpeechProvider),
@@ -29,14 +30,22 @@ class BoardWidget extends StatelessWidget {
 
     return  Column(
       children: [
-        Row(
-          children: const [
-            Icon(
-              Icons.psychology,
-            ),
-            Text('Linguality'),
-            // Text(title),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(top: 5, left: 5, bottom: 5),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.psychology,
+                size: 24,
+              ),
+              Text(title,
+                style: const TextStyle(
+                  fontSize: 24,
+                ),
+              ),
+              // Text(title),
+            ],
+          ),
         ),
         BlocProvider(
           create: (_) => boardBloc,
