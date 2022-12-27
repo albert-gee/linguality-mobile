@@ -29,17 +29,14 @@ class BotMessagesWidget extends StatelessWidget {
     List<Message> messages = bot.messages;
 
     return Expanded(
-        child: Container(
-          color: Colors.blueGrey[50],
-          child: ListView.builder(
-            controller: scrollController,
-            reverse: false,
-            shrinkWrap: true,
-            itemCount: inputOpened ? messages.length + 1 : messages.length, // +1 for input
-            itemBuilder: (context, index) {
-              return _buildListItem(context, index);
-            },
-          )
+        child: ListView.builder(
+          controller: scrollController,
+          reverse: false,
+          shrinkWrap: true,
+          itemCount: inputOpened ? messages.length + 1 : messages.length, // +1 for input
+          itemBuilder: (context, index) {
+            return _buildListItem(context, index);
+          },
         ));
   }
 

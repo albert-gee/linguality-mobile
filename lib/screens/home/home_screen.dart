@@ -1,53 +1,42 @@
-import 'package:board/providers/article_paragraph_to_speech_provider_contract.dart';
-import 'package:board/providers/article_provider_contract.dart';
-import 'package:board/widgets/board_widget.dart';
-import 'package:bot/providers/bot_provider_contract.dart';
-import 'package:bot/providers/text_to_speech_provider_contract.dart';
+import 'package:board/widgets/board/board_widget.dart';
+import 'package:bot/widgets/bot_header_widget.dart';
 import 'package:bot/widgets/bot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../liguality_app.dart';
+
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({
-    super.key,
-    required this.title,
-    required this.botProvider,
-    required this.articleProvider,
-    required this.textToSpeechProvider,
-    required this.articleParagraphToSpeechProvider,
-  });
-
-  final String title;
-  final BotProviderContract botProvider;
-  final ArticleProviderContract articleProvider;
-  final TextToSpeechProviderContract textToSpeechProvider;
-  final ArticleParagraphToSpeechProviderContract articleParagraphToSpeechProvider;
-
-  final double _panelHeightOpen = 50;
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    double panelHeightClosed = MediaQuery.of(context).size.height - 400;
+    double panelMaxHeight =
+        MediaQuery.of(context).size.height - LingualityApp.botPanelMaxHeightGap;
 
     return Scaffold(
       body: SafeArea(
         child: SlidingUpPanel(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(LingualityApp.botPanelBorderRadius),
           ),
-          minHeight: _panelHeightOpen,
-          maxHeight: panelHeightClosed,
-          defaultPanelState: PanelState.OPEN,
-          controller: PanelController(),
+          controller: LingualityApp.botPanelController,
+          color: Theme.of(context).dialogBackgroundColor,
+          defaultPanelState: PanelState.CLOSED,
+          minHeight: LingualityApp.botPanelMinHeight,
+          maxHeight: panelMaxHeight,
+          snapPoint: LingualityApp.botPanelSnapPoint,
+          header: const BotHeaderWidget(),
           body: BoardWidget(
-            title: title,
-            articleProvider: articleProvider,
-            articleParagraphToSpeechProvider: articleParagraphToSpeechProvider,
+            appTitle: LingualityApp.appTitle,
+            appTitleIcon: LingualityApp.appTitleIcon,
+            storyProvider: LingualityApp.storyProvider,
+            articleParagraphToSpeechProvider:
+                LingualityApp.articleParagraphToSpeechProvider,
           ),
           panel: BotWidget(
-            botProvider: botProvider,
-            textToSpeechProvider: textToSpeechProvider,
+            botProvider: LingualityApp.botProvider,
+            textToSpeechProvider: LingualityApp.textToSpeechProvider,
           ),
         )
       ),

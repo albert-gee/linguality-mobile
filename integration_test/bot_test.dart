@@ -1,5 +1,5 @@
 import 'package:bot/widgets/bot_input_widget.dart';
-import 'package:bot/widgets/bot_slider_widget.dart';
+import 'package:bot/widgets/bot_header_widget.dart';
 import 'package:bot/widgets/bot_widget.dart';
 import 'package:bot/widgets/bot_messages_widget.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +44,8 @@ Future<void> testBot (WidgetTester tester) async {
   // delay
   await Future.delayed(const Duration(seconds: 1), (){});
 
-  expect(find.byType(BotSliderWidget), findsOneWidget);
-  await tester.drag(find.byType(BotSliderWidget), const Offset(0.0, -500.0));
+  expect(find.byType(BotHeaderWidget), findsOneWidget);
+  await tester.drag(find.byType(BotHeaderWidget), const Offset(0.0, -500.0));
   await tester.pumpAndSettle();
 
 }

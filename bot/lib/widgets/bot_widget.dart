@@ -11,7 +11,7 @@ import '../providers/bot_provider_contract.dart';
 import '../services/bot/bot_service.dart';
 import '../services/text_to_speech/text_to_speech_service.dart';
 import 'bot_input_widget.dart';
-import 'bot_slider_widget.dart';
+import 'bot_header_widget.dart';
 import 'bot_messages_widget.dart';
 
 class BotWidget extends StatelessWidget {
@@ -81,7 +81,7 @@ class BotWidget extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Column(
           children: [
-            const BotSliderWidget(),
+            // const BotSliderWidget(),
             BotMessagesWidget(
                 bot: bot,
                 inputOpened: inputOpened,

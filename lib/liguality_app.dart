@@ -1,65 +1,99 @@
 import 'package:board/providers/article_provider_contract.dart';
+import 'package:board/providers/story_provider_contract.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 import 'package:board/providers/article_paragraph_to_speech_provider_contract.dart';
 import 'package:bot/providers/bot_provider_contract.dart';
 import 'package:bot/providers/text_to_speech_provider_contract.dart';
+import 'package:linguality_mobile/providers/article_paragraph_to_speech_provider.dart';
+import 'package:linguality_mobile/providers/story_provider.dart';
+import 'package:linguality_mobile/providers/bot_provider.dart';
+import 'package:linguality_mobile/providers/text_to_speech_provider.dart';
 
 import 'package:linguality_mobile/screens/home/home_screen.dart';
+import 'package:linguality_mobile/utils/api/api.dart';
+import 'package:linguality_mobile/utils/auth/auth_service.dart';
 import 'package:linguality_mobile/utils/auth/auth_service_contract.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 /// The main app widget
 class LingualityApp extends StatelessWidget {
   static const String appTitle = 'Linguality';
-  final BotProviderContract botProvider;
-  final ArticleProviderContract articleProvider;
-  final TextToSpeechProviderContract textToSpeechProvider;
-  final ArticleParagraphToSpeechProviderContract articleParagraphToSpeechProvider;
-  final AuthServiceContract authService;
+  static const IconData appTitleIcon = Icons.psychology;
+
+  /// Bot Panel Settings
+  static const double botPanelBorderRadius = 10.0;
+  static const double botPanelMinHeight = 150;
+  static const double botPanelMaxHeightGap = 50;
+  static const double botPanelSnapPoint = 0.5;
+
+  /// Controllers
+  static final PanelController botPanelController = PanelController();
+
+  /// Services
+  static final AuthServiceContract auth = AuthService();
+  static final Api api = Api(auth: auth);
+
+  /// Providers
+  static final ArticleParagraphToSpeechProviderContract articleParagraphToSpeechProvider = ArticleParagraphToSpeechProvider(api: api);
+  static final StoryProviderContract storyProvider = StoryProvider(api: api);
+  static final BotProviderContract botProvider = BotProvider(api: api);
+  static final TextToSpeechProviderContract textToSpeechProvider = TextToSpeechProvider(api: api);
+
+  /// Theme Data
+  static final ThemeData themeData = ThemeData(
+      dialogBackgroundColor: Colors.blueGrey.shade50,
+      primarySwatch: Colors.blueGrey,
+      primaryColor: Colors.grey[300]);
 
   const LingualityApp({
     super.key,
-    required this.botProvider,
-    required this.textToSpeechProvider,
-    required this.articleParagraphToSpeechProvider,
-    required this.authService,
-    required this.articleProvider,
   });
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
-      title: appTitle,
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
-      home: FutureBuilder<bool>(
-        future: authService.authenticate().then((value) async {
-          return await Future.delayed(const Duration(seconds: 5), () {return true;});
-        }), // for testing purposes
-        builder: (
-          BuildContext context,
-          AsyncSnapshot<bool> snapshot,
-        ) {
-
-          Widget returnWidget;
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            returnWidget = _buildLoadingWidget();
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            returnWidget = (snapshot.hasData && snapshot.data == false)
-                ? _buildErrorWidget('Error')
-                : _buildHomeScreen();
-          } else {
-            returnWidget = _buildLoadingWidget();
-          }
-
-          return returnWidget;
-        },
-      ),
+      home: const HomeScreen(),
+      theme: themeData,
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   double panelMaxHeight = MediaQuery.of(context).size.height - _panelMaxHeightGap;
+  //
+  //   return MaterialApp(
+  //     title: appTitle,
+  //     theme: themeData,
+  //     home: FutureBuilder<bool>(
+  //       future: authService.authenticate().then((value) async {
+  //         return await Future.delayed(const Duration(seconds: 5), () {
+  //           return true;
+  //         });
+  //       }), // for testing purposes
+  //       builder: (
+  //         BuildContext context,
+  //         AsyncSnapshot<bool> snapshot,
+  //       ) {
+  //         Widget returnWidget;
+  //
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           returnWidget = _buildLoadingWidget();
+  //         } else if (snapshot.connectionState == ConnectionState.done) {
+  //           returnWidget = (snapshot.hasData && snapshot.data == false)
+  //               ? _buildErrorWidget('Error')
+  //               : _buildHomeScreen();
+  //         } else {
+  //           returnWidget = _buildLoadingWidget();
+  //         }
+  //
+  //         return returnWidget;
+  //       },
+  //     ),
+  //   );
+  // }
 
   Widget _buildLoadingWidget() {
     const colorizeTextStyle = TextStyle(
@@ -118,13 +152,14 @@ class LingualityApp extends StatelessWidget {
     );
   }
 
-  Widget _buildHomeScreen() {
-    return HomeScreen(
-      title: appTitle,
-      botProvider: botProvider,
-      articleProvider: articleProvider,
-      textToSpeechProvider: textToSpeechProvider,
-      articleParagraphToSpeechProvider: articleParagraphToSpeechProvider,
-    );
-  }
+// Widget _buildHomeScreen() {
+//   return HomeScreen(
+//     appTitle: appTitle,
+//     appTitleIcon: appTitleIcon,
+//     botProvider: botProvider,
+//     articleProvider: articleProvider,
+//     textToSpeechProvider: textToSpeechProvider,
+//     articleParagraphToSpeechProvider: articleParagraphToSpeechProvider,
+//   );
+// }
 }

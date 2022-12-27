@@ -1,7 +1,7 @@
 import 'package:board/widgets/article/article_widget.dart';
 import 'package:board/widgets/articles/latest_articles_card_widget.dart';
 import 'package:board/widgets/articles/latest_articles_widget.dart';
-import 'package:board/widgets/board_widget.dart';
+import 'package:board/widgets/board/board_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> testBoard(WidgetTester tester) async {
